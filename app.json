@@ -1,0 +1,17 @@
+{
+  "name": "hfl",
+  "displayName": "hfl",
+  "expo": {
+    "name": "hfl",
+    "slug": "expo-template-bare",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
