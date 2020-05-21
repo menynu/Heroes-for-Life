@@ -1,30 +1,26 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from '../screens/HomeScreen';
 import RegistrationForm from '../screens/RegistrationForm';
+// import LoginForm from '../screens/LoginForm';
 import Header from '../screens/common/Header';
 import React from 'react';
 
 const screens ={
     HomeScreen:{
         screen: HomeScreen,
-        navigationOptions:({navigation}) =>({
-        title:'דף הבית'
-        // return{
-        //     headerTitle:()=> <Header navigation={navigation}/>,
-        // }
+        navigationOptions:() =>({
+        title:'דף הבית',
+        headerStyle: {
+        backgroundColor: '',
+        //Background color of ActionBar
+      },
         })
-    
-        // navigationOption: ({navigation}) =>{
-        //     return{
-        //         headerTitle:()=> <Header navigation={navigation}/>,
-        //     }
-        // }
     },
     RegistrationForm:{
         screen : RegistrationForm,
-        navigationOption : {
-            title : 'טופס רישום'
-        }
+        navigationOptions:() =>({
+            title:'הגשת מועמדות'
+        })
     },
 }
 

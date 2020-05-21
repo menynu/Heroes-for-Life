@@ -9,11 +9,11 @@ export default class HomeScreen extends Component {
     render(){
         return (
         <View>
-            {/* <Header>
+            <Header>
                 <Left>
-                <Icon name='menu'/>
+                    <Icon name='menu'  onPress={() => this.props.navigation.openDrawer()}/>
                 </Left>
-            </Header> */}
+            </Header> 
             <ScrollView>
             <View>
             <Text style={{fontSize:40,color:'blue',marginTop:50}}>לוחמים ללא גבולות</Text>
@@ -32,7 +32,6 @@ export default class HomeScreen extends Component {
             </View>
             </ScrollView>
         </View>
-
         );
     }
 }

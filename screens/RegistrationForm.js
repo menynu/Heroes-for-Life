@@ -8,7 +8,7 @@ import RadioButton from '../components/RadioButton';
 
 const PROP = [
 	{
-		key: 'Male', 
+		key: 'Male',
 		text: 'זכר',
 	},
 	{

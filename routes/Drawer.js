@@ -12,18 +12,19 @@ const RootDrawerNavigator = createDrawerNavigator({
         title:'דף הבית'
     })
     },
-    LoginStack:{
-    screen:LoginStack,
-    navigationOptions:() =>({
-        title:'כניסה למורשים'
-    })
-    },
     RegistrationForm:{
         screen:HomeStack,
         navigationOptions:() =>({
         title:'הגשת מועמדות'
     })
     },
+    LoginForm:{
+        screen:LoginForm,
+        navigationOptions:() =>({
+        title:'כניסה למורשים'
+    })
+    },
+    
 })
 
 export default createAppContainer(RootDrawerNavigator);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TextInput, Button, Alert } from 'react-native';
+import { Header } from 'react-native-elements';
 import { View } from 'native-base';
 import { DotIndicator } from 'react-native-indicators';
 import firebase from '../database/firebaseDb';
@@ -86,8 +87,12 @@ class LoginForm extends Component {
 
     render() {
         return(
-            <View style= {{marginTop: 150}}>
-
+            <View style= {{}}>
+                <Header
+                    leftComponent={{ icon: 'menu', color: '#fff' }}
+                    centerComponent={{ text: 'מערכת מורשים', style: { color: '#fff' } }}
+                    rightComponent={{ icon: 'home', color: '#fff' }}
+                />
                 <View style={styles.inputView}>
                     <TextInput
                         style = {styles.textInputStyle}

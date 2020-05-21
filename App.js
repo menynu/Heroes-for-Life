@@ -20,9 +20,9 @@ import firebase from './database/firebaseDb';
 export default class App extends Component {
   render(){
   return (
-
+    
     <Navigator/>
 
-  );
-  }
+    );
+    }
 }
