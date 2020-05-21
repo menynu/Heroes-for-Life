@@ -1,36 +1,28 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import {Component} from 'react';
+import {View, Text} from 'react-native';
+// import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+// import { createStackNavigator } from '@react-navigation/stack';
 
-const instructions = Platform.select({
-  ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
-  android: `Double tap R on your keyboard to reload,\nShake or press menu button for dev menu`,
-});
+import Navigator from './routes/Drawer';
 
-export default function App() {
+import HomeScreen from './screens/HomeScreen';
+import RegistrationForm from './screens/RegistrationForm';
+import Volunteer from './screens/Volunteer';
+import AdminPage from './screens/AdminPage';
+import {Header , Button, Spinner} from './screens/common';
+import LoginForm from './screens/LoginForm';
+import UserDetailScreen from './screens/UserDetailScreen';
+import firebase from './database/firebaseDb';
+
+
+export default class App extends Component {
+  render(){
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.instructions}>To get started, edit App.js</Text>
-      <Text style={styles.instructions}>{instructions}</Text>
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+    <Navigator/>
+
+  );
+  }
+}
