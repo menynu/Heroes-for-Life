@@ -3,31 +3,25 @@ import HomeScreen from '../screens/HomeScreen';
 import RegistrationForm from '../screens/RegistrationForm';
 // import LoginForm from '../screens/LoginForm';
 import Header from '../screens/common/Header';
-//import AdminPage from '../screens/AdminPage';
 import React from 'react';
 
 const screens ={
     HomeScreen:{
         screen: HomeScreen,
-        title: 'דף הבית',
-        navigationOption: {title: 'מערכת מורשים'}//({navigation}) =>{
-            // return{
-            //     headerTitle:()=> <Header navigation={navigation}/>,
-            // }
-      //  }
+        navigationOptions:() =>({
+        title:'דף הבית',
+        headerStyle: {
+        backgroundColor: '',
+        //Background color of ActionBar
+      },
+        })
     },
     RegistrationForm:{
         screen : RegistrationForm,
-        navigationOption : {
-            title : 'טופס רישום'
-        }
+        navigationOptions:() =>({
+            title:'הגשת מועמדות'
+        })
     },
-    // LoginForm:{
-    //     screen:LoginForm,
-    //     navigationOption:{
-    //         title:'מערכת מורשים'
-    //     }
-    //}
 }
 
 const HomeStack = createStackNavigator(screens,{

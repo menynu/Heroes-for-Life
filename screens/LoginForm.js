@@ -1,92 +1,159 @@
-import React, {Component} from 'react';
-import {Text , View} from 'react-native';
-import {Header} from '../screens/common';
-import firebase from 'firebase';
-import {Button, Card, CardSection,Input,Spinner} from './common';
+import React, { Component } from 'react';
+import { TextInput, Button, Alert } from 'react-native';
+import { Header } from 'react-native-elements';
+import { View } from 'native-base';
+import { DotIndicator } from 'react-native-indicators';
+import firebase from '../database/firebaseDb';
 
 class LoginForm extends Component {
-  state = {email:'',password:'',error:'',loading:false};
-  
-  onButtonPress(){
-    const {email,password} = this.state;
-
-    this.setState({ error: '' });
-
-    firebase.auth().signInWithEmailAndPassword(email,password)
-      .then(this.onLoginSuccess.bind(this))
-      .catch(() => {
-
-        firebase.auth().createUserWithEmailAndPassword(email,password)
-          .then(this.onLoginSuccess.bind(this))
-          .catch(this.onLoginFail.bind(this));
-      });
-  }
-
-  onLoginFail(){
-    this.setState({error:'Autentication Failed',loading:false});
-  }
-
-  onLoginSuccess(){
-    this.setState({
-      email:'',
-      password:'',
-      loading:false,
-      error:''
-    })
-  }
-
-  renderButton(){
-    if(this.state.loading){
-      return (<Spinner size="small"/>);
+    constructor() {
+        super();
+        this.usersRef = firebase.firestore().collection('Users')
+        this.state = {
+            email: "",
+            password: "",
+            loading: false
+        }
     }
-    return (<Button onPress={this.onButtonPress.bind(this)}>log in</Button>);
+
+    // addUserToFire() {
+    //     this.usersRef.add({
+    //         Uid: firebase.auth().currentUser.uid,
+    //         Username: this.state.username
+    //     })
+    // }
+
+    onLoginSuccess() {
+        
+        // when secsuss check if manager or voulnteer
+        this.setState({
+            email: "",
+            password: "",
+            loading: false
+        })
+    }
+
+    onLoginFail() {
+        this.setState({ loading: false})
+        Alert.alert(
+            "Error",
+            "Email or password are incorrect",
+            [{ text: "OK"}],
+            { cancelable: false}
+        )
+    }
 
 
-  }
+    onButtonPress() {
+        // firebase.auth().onAuthStateChanged((user) => {
+        //     if(user != null) {
+        //         this.addUserToFire()
+        //     }
+        // })
 
-  render() {
-    return (
-        <View>
-          <Header headerText="מערכת התחברות" />
-        <Card>
-          <CardSection>
-            <Input
-              secureTextEntry = {false}
-              placeHolder="user@gmail.com"
-              lable="אימייל" 
-              value={this.state.email}
-              onChangeText={email=>this.setState({email})}
-              />
-          </CardSection>
-          <Text style={styles.errorTextStyle}>
-            {this.state.error}
-          </Text>
+        const { email, password } = this.state
+        this.setState({ loading: true })
 
-          <CardSection>
-           <Input
-              secureTextEntry = {true}
-              placeHolder="password"
-              lable="סיסמא" 
-              value={this.state.password}
-              onChangeText={password=>this.setState({password})}
-              />
-            </CardSection>
+        firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(
+            this.onLoginSuccess.bind(this)
+        )
+        .catch(
+            this.onLoginFail.bind(this)
+        )
+    }
 
-          <CardSection>
-            {this.renderButton()}
-          </CardSection>
-        </Card>
+
+
+    renderButton() {
+        if (this.state.loading) {
+            return <DotIndicator color = "#004577"/>
+        }
+
+        return (
+            <View style = {styles.buttonStyle}>
+                <Button
+                    title = "Log in"
+                    color = "004577"
+                    backgroundColor = 'white'
+                    onPress= {() => this.onButtonPress()}
+                >
+                </Button>
         </View>
-    );
-  }
+        )
+    }
+
+    render() {
+        return(
+            <View style= {{}}>
+                <Header
+                    leftComponent={{ icon: 'menu', color: '#fff' }}
+                    centerComponent={{ text: 'מערכת מורשים', style: { color: '#fff' } }}
+                    rightComponent={{ icon: 'home', color: '#fff' }}
+                />
+                <View style={styles.inputView}>
+                    <TextInput
+                        style = {styles.textInputStyle}
+                        textAlign = "center"
+                        placeholder = {"Email"}
+                        placeholderTextColor = "#BCBCBC"
+                        height = {45}
+                        autoCorrect = {false}
+                        onChangeText = {email => this.setState({ email })}
+                        value = {this.state.email}
+                    />
+                </View>
+
+                <View style={styles.inputView}>
+                    <TextInput
+                        style = {styles.textInputStyle}
+                        textAlign = "center"
+                        placeholder = {"Password"}
+                        placeholderTextColor = "#BCBCBC"
+                        secureTextEntry = {true}
+                        height = {45}
+                        autoCorrect = {false}
+                        onChangeText = {password => this.setState({ password })}
+                        value = {this.state.password}
+                    />
+                </View>
+
+        <View>{this.renderButton()}</View>
+
+
+
+            </View>
+        )
+    }
 }
 
-const styles={
-  errorTextStyle:{
-    fontSize:20,
-    alignSelf:'center',
-    color:'red'
-  }
-};
+export default LoginForm;
 
-export {LoginForm};
+const styles = {
+    inputView: {
+        paddingTop: 20,
+        paddingBottom: 20
+    },
+    textInputStyle: {
+        borderColor: "#004577",
+        borderRadius: 25,
+        borderWidth: 2,
+        fontSize: 20,
+        width: "80%",
+        alignSelf: "center"
+    },
+    buttonStyle: {
+        backgroundColor: "#004577",
+        borderColor: "#004577",
+        borderRadius: 25,
+        borderWidth: 2,
+        fontSize: 20,
+        width: "60%",
+        alignSelf: "center",
+        marginTop: 20
+    }
+
+}
+

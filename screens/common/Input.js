@@ -10,7 +10,7 @@ const Input = ({lable,value,onChangeText,placeholder,secureTextEntry}) => {
       <Text style={lableStyle}>{lable}</Text>
         <TextInput
           secureTextEntry= {secureTextEntry}
-          placeHolder={placeholder}
+          placeholder={placeholder}
           autoCorrect={false}
           style={inputStyle}
           value={value}
