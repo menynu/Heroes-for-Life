@@ -1,9 +1,18 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import LoginForm from '../screens/LoginForm';
+import AdminPage from '../screens/AdminPage'
 
 const screens ={
     LoginForm:{
         screen:LoginForm,
+    },
+	AdminPage:{
+	screen:AdminPage,
+	navigationOption: ({navigation}) =>{
+		return{
+			headerTitle: () => <Header navigation={navigation}/>,
+		}
+	}
     },
 }
 
