@@ -3,28 +3,23 @@ import { createAppContainer } from 'react-navigation';
 
 import HomeStack from './HomeStack';
 import LoginStack from './LoginStack';
-import LoginForm from '../screens/LoginForm';
+//import AdminPage from '../screens/AdminPage';
+import Volunteer from '../screens/Volunteer';
+//import UserDetailScreen from '../screens/UserDetailScreen';
+
 
 const RootDrawerNavigator = createDrawerNavigator({
-    HomeScreen:{
-    screen:HomeStack,
-    navigationOptions:() =>({
-        title:'דף הבית'
-    })
+    Volunteer:{
+    screen:Volunteer
     },
-    RegistrationForm:{
-        screen:HomeStack,
-        navigationOptions:() =>({
-        title:'הגשת מועמדות'
-    })
+    HomeScreen:{
+    screen:HomeStack
     },
     LoginForm:{
-        screen:LoginForm,
-        navigationOptions:() =>({
-        title:'כניסה למורשים'
-    })
+    screen:LoginStack
     },
-    
+
+
 })
 
 export default createAppContainer(RootDrawerNavigator);

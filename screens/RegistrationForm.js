@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View } from 'react-native';
 import firebase from '../database/firebaseDb';
-
 import RadioButton from '../components/RadioButton';
 
 
