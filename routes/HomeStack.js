@@ -1,0 +1,34 @@
+import { createStackNavigator } from 'react-navigation-stack';
+import HomeScreen from '../screens/HomeScreen';
+import RegistrationForm from '../screens/RegistrationForm';
+// import LoginForm from '../screens/LoginForm';
+import Header from '../screens/common/Header';
+import React from 'react';
+
+const screens ={
+    HomeScreen:{
+        screen: HomeScreen,
+        navigationOptions:() =>({
+        title:'דף הבית',
+        headerStyle: {
+        backgroundColor: '',
+        //Background color of ActionBar
+      },
+        })
+    },
+    RegistrationForm:{
+        screen : RegistrationForm,
+        navigationOptions:() =>({
+            title:'הגשת מועמדות'
+        })
+    },
+}
+
+const HomeStack = createStackNavigator(screens,{
+    defaultNavigationOption:{
+        headerTintColor:'#444',
+        headerStyle:{backgroundColor:'#eee' , height:60}
+    }
+});
+
+export default HomeStack;
