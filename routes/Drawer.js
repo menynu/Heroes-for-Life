@@ -2,23 +2,30 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
 
 import HomeStack from './HomeStack';
-import LoginStack from './LoginStack';
-import Volunteer from '../screens/Volunteer';
+import AdminStack from './AdminStack';
+import VolunteerStack from './VolunteerStack';
 
+import  LoginForm from '../screens/LoginForm';
+import  RegistrationForm from '../screens/RegistrationForm';
 
 
 const RootDrawerNavigator = createDrawerNavigator({
 
     HomeScreen:{
-    screen:HomeStack
+        screen:HomeStack
     },
     LoginForm:{
-    screen:LoginStack
+        screen:LoginForm
+    },
+    RegistrationForm:{
+        screen:RegistrationForm
     },
     Volunteer:{
-    screen:Volunteer
+        screen:VolunteerStack
     },
-
+    AdminScreen:{
+        screen:AdminStack
+    }
 
 })
 

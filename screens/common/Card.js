@@ -10,13 +10,13 @@ const styles = {
     borderWidth: 1,
     borderRadius: 3,
     borderColor: '#ddd',
-    borderBouuomWidth: 0,
+    borderBottomWidth: 0,
     shadowColor: '#000',
     shadowOffset: {width: 1, height: 2},
     shadowRadius: 2,
     elevation: 1,
     marginLeft: 5,
-    maeginRight: 5,
+    marginRight: 5,
     marginTop: 10,
   }
 };

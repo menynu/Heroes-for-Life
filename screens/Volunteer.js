@@ -1,16 +1,15 @@
-
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView,Button, ActivityIndicator, View, Text, SafeAreaView } from 'react-native';
-import { ListItem } from 'react-native-elements'
+import { StyleSheet, ScrollView,Button, ActivityIndicator, View, Text, SafeAreaView, I18nManager } from 'react-native';
+import { ListItem } from 'react-native-elements';
 import firebase from '../database/firebaseDb';
-import AdminPage from './AdminPage';
+import Information from './Information';
 
 
 
 class Volunteer extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.firestoreRef = firebase.firestore().collection('delegation');
     this.state = {
       isLoading: true,
@@ -30,92 +29,105 @@ class Volunteer extends Component {
   getCollection = (querySnapshot) => {
     const userArr = [];
     querySnapshot.forEach((res) => {
-      const { Name, Email, Mobile, Gender, Location, about_me, lang_support } = res.data();
+      const { Name, Email, Mobile, Gender, Location, about_me, lang_support, meetDate, meetTime, Status } = res.data();
       userArr.push({
         key: res.id,
         res,
         Name,
         Email,
         Mobile,
-        //Gender,
-        // Location,
-        // about_me,
-        // lang_support,
+        Gender,
+        Location,
+        about_me,
+        lang_support,
+        meetDate,
+        meetTime,
+        Status,
       });
     });
     this.setState({
       userArr,
       isLoading: false,
       render(){
-      //  <Text> abc</Text>
-      //<Text > dasdasd </Text>
+        //  <Text> abc</Text>
+        //<Text > dasdasd </Text>
       }
-   });
+    });
   }
   //  changeView(){
   //    this.setState({
   //      viewOne: !this.state.viewOne
   //    })
 
-    render() {
-      if(this.state.isLoading){
-        return(
+  render() {
+    I18nManager.forceRTL(true);
+    if(this.state.isLoading){
+      return(
           <View style={styles.preloader}>
             <ActivityIndicator size="large" color="#9E9E9E"/>
             <Text> Loading</Text>
           </View>
-        )
-    }    
+      )
+    }
+    I18nManager.forceRTL(true);
     return (
-  
-  <SafeAreaView style={styles.container}>
 
-      <ScrollView 
-      style= {styles.container}>
-     
-          <Text> asdsa
-          </Text> 
+        <SafeAreaView style={styles.container}>
 
-          {
-            this.state.userArr.map((item, i) => {
-              return (
-                <View>
-                <ListItem
-                  key={i}
-                  chevron
-                  pad={22}
-                  bottomDivider
-                  title={item.Name}
-                  subtitle={item.Email}
-                  
+          <ScrollView
+              style= {styles.container}>
 
-                  onPress={() => this.props.navigation.navigate('AdminPage',{userKey: item.key}) }
-                  // onPress={() => { 
-                  //   console.log(item.key),
-                  //   this.props.navigation.navigate('AdminPage',
-                  //   {userkey: item.key}
-                  //   );}}
-                  />
-                  <View>
-                  <Text>number = {i} + 1= {i+i}</Text> 
-                  <Text> test . . . . . </Text>
-                  <Button onPress={() => this.props.navigation.navigate('UserDetailScreen')} title="כניסה למורשים"/>
-                  </View>
-                  </View>
-       
-              );
-            })
-          }
-      </ScrollView>
-      </SafeAreaView>
+            <Text style={{fontSize: 20, alignText: 'center'}}> דף המלגאים
+            </Text>
+
+            {
+              this.state.userArr.map((item, i) => {
+                return (
+
+                    <View>
+                      <ListItem
+                          key={i}
+                          chevron
+                          pad={22}
+                          bottomDivider
+                          title={item.Name}
+                          subtitle={item.Email}
+                          onPress={() => this.props.navigation.navigate('Information',{userKey: item.key}) }
+                          // onPress={() => {
+                          //   console.log(item.key),
+                          //   this.props.navigation.navigate('Info',
+                          //   {userkey: item.key}
+                          //   );}}
+                      />
+                      <View>
+
+                        <Text> שם: {item.Name}  </Text>
+                        <Text> טלפון: {item.Mobile} </Text>
+                        <Text> אימייל: {item.Email}  </Text>
+                        <Text> כתובת מגורים: {item.Location}  </Text>
+                        <Text> על עצמי: {item.about_me}   </Text>
+                        <Text> יעד משלחת: {item.Destination}  </Text>
+                        <Text>  שפות: {item.lang_support}  </Text>
+                        <Text> תאריך ראיון: {item.meetDate}  </Text>
+                        <Text> שעת ראיון: {item.meetTime} </Text>
+                        <Text> סטאטוס: {item.Status} </Text>
+
+                      </View>
+                    </View>
+
+                );
+              })
+            }
+          </ScrollView>
+        </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   paddingBottom: 22
+    flex: 1,
+    paddingBottom: 22
   },
   preloader: {
     left: 0,
@@ -129,4 +141,3 @@ const styles = StyleSheet.create({
 })
 
 export default Volunteer;
-

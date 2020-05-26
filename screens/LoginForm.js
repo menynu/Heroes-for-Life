@@ -8,6 +8,7 @@ import firebase from '../database/firebaseDb';
 class LoginForm extends Component {
     constructor() {
         super();
+        //this.userPerm = firebase.firestore().collection('Users')
         this.usersRef = firebase.firestore().collection('Users')
         this.state = {
             email: "",
@@ -24,8 +25,14 @@ class LoginForm extends Component {
     // }
 
     onLoginSuccess() {
-        
+        firebase.auth().onAuthStateChanged((user) => {
+            if(user != null) {
+
+                this.props.navigation.navigate('Volunteer');
+            }
+        })
         // when secsuss check if manager or voulnteer
+        //this.props.navigation.navigate('HomeScreen');
         this.setState({
             email: "",
             password: "",
@@ -55,14 +62,14 @@ class LoginForm extends Component {
         this.setState({ loading: true })
 
         firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(
-            this.onLoginSuccess.bind(this)
-        )
-        .catch(
-            this.onLoginFail.bind(this)
-        )
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(
+                this.onLoginSuccess.bind(this)
+            )
+            .catch(
+                this.onLoginFail.bind(this)
+            )
     }
 
 
@@ -81,7 +88,7 @@ class LoginForm extends Component {
                     onPress= {() => this.onButtonPress()}
                 >
                 </Button>
-        </View>
+            </View>
         )
     }
 
@@ -120,7 +127,7 @@ class LoginForm extends Component {
                     />
                 </View>
 
-        <View>{this.renderButton()}</View>
+                <View>{this.renderButton()}</View>
 
 
 
@@ -156,4 +163,3 @@ const styles = {
     }
 
 }
-
