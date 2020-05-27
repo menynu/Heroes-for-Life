@@ -21,11 +21,24 @@ class LoginForm extends Component {
     onLoginSuccess() {
         firebase.auth().onAuthStateChanged((user) => {
             if(user != null) {
+                this.usersRef
+                    .get()
+                    .then(querySnapshot => {
+                        console.log('Total users: ', querySnapshot.size);
 
-                this.props.navigation.navigate('Volunteer');
+                        querySnapshot.forEach(documentSnapshot => {
+                            if(user.email===documentSnapshot.data().email){
+                                if(documentSnapshot.data().permission==="M"){
+                                    this.props.navigation.navigate('AdminPage');
+                                }
+                                else{
+                                    this.props.navigation.navigate('Volunteer');
+                                }
+                            }
+                        });
+                    });
             }
         })
-        // when secsuss check if manager or voulnteer
         this.setState({
             email: "",
             password: "",
