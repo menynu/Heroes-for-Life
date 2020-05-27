@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View,ScrollView ,SafeAreaView } from 'react-native';
-import { Container, Header, Content,Button, Icon, Form,Text, Item, Input, Label} from 'native-base';
+import { Container, DatePicker, Content,Button, Icon, Form,Text, Item, Input, Label} from 'native-base';
 import firebase from "../database/firebaseDb";
 import {Card} from "./common";
 // import {addUser,addDelegation} from'../src/api/UsersApi'
@@ -21,17 +21,12 @@ export default class AdminPage extends React.Component {
             permission: '',
             delegation: '',
             name: '',
-            expiration: '',
-            time: new Date().toLocaleString(),
+            expiration:  new Date(),
+            time: '',
             isLoading: false
         };
-    }
-    componentWillMount(){
-        setInterval(function(){
-            this.setState({
-                curTime: new Date().toLocaleString()
-            })
-        }.bind(this), 1000);
+        this.setDate = this.setDate.bind(this);
+
     }
 
     delegationNameUpdate = (val,prop) => {
@@ -44,6 +39,9 @@ export default class AdminPage extends React.Component {
         const state = this.state;
         state[prop] = val;
         this.setState(state);
+    }
+    setDate(newDate) {
+        this.setState({ expiration: newDate });
     }
 
 
@@ -58,14 +56,11 @@ export default class AdminPage extends React.Component {
             });
             this.dbDelRef.add({
                 name: this.state.name,
-                expiration: this.state.time,
-                //value: res.key
+                expiration: this.state.expiration,
             }).then((res) => {
                 this.setState({
                     name: '',
                     expiration: '' ,
-                    // delegation: '',
-                    // permission: '',
                     isLoading: false
 
                 })
@@ -99,25 +94,24 @@ export default class AdminPage extends React.Component {
                     email: this.state.email,
                     delegation: this.state.delegation,
                     permission: this.state.permission,
-                    //value: res.key
-                }).then((res) => {
+                    }),
                     this.setState({
-                        email: '',
-                        password:'',
-                        delegation: '',
-                        permission: '',
+                    email: '',
+                    password:'',
+                    delegation: '',
+                    permission: '',
+                    isLoading: false,
+                        }
+                    )
+                )
+                .catch((err) => {
+                    console.error("Error found: ", err);
+                    this.setState({
                         isLoading: false,
-
-                    })
+                    });
                 })
-                    .catch((err) => {
-                        console.error("Error found: ", err);
-                        this.setState({
-                            isLoading: false,
-                        });
-                    }))
-            .catch(alert(email,password))
         }
+        this.props.navigation.navigate('AdminPage');
     }
 
     render() {
@@ -128,7 +122,7 @@ export default class AdminPage extends React.Component {
                         <Content>
                         <Card>
                             <Form>
-                                <Text style={{fontSize:24}}> לרישום מלגאי במערכת:</Text>
+                                <Text style={{fontSize:24}}> לרישום משתמש במערכת:</Text>
                                 <Item floatingLabel>
                                     <Label>אימייל</Label>
                                     <Input
@@ -141,7 +135,7 @@ export default class AdminPage extends React.Component {
                                 <Item floatingLabel last>
                                     <Label>סיסמא ראשונית</Label>
                                     <Input
-                                        placeholder={'delegation'}
+                                        placeholder={'password'}
                                         value={this.state.password}
                                         onChangeText={(val) => this.inputValueUpdate(val, 'password')}
 
@@ -159,9 +153,9 @@ export default class AdminPage extends React.Component {
                                 <Item floatingLabel last>
                                     <Label>מלגאי/מנהל</Label>
                                     <Input
-                                        placeholder={'status'}
-                                        value={this.state.status}
-                                        onChangeText={(val) => this.inputValueUpdate(val, 'status')}
+                                        placeholder={'M/V'}
+                                        value={this.state.permission}
+                                        onChangeText={(val) => this.inputValueUpdate(val, 'permission')}
 
 
                                     />
@@ -187,15 +181,30 @@ export default class AdminPage extends React.Component {
 
                                     />
                                 </Item>
-                                <Item floatingLabel last>
-                                    <Label>תאריך יציאה:</Label>
-                                    <Input />
+                                <Item >
+                                    <Text>תאריך סגירת המשלחת:</Text>
+                                    <DatePicker
+                                        defaultDate={new Date(2020, 8, 1)}
+                                        minimumDate={new Date(2020, 8, 1)}
+                                        maximumDate={new Date(2030, 12, 31)}
+                                        locale={"en"}
+                                        timeZoneOffsetInMinutes={undefined}
+                                        modalTransparent={false}
+                                        animationType={"fade"}
+                                        androidMode={"default"}
+                                        placeHolderText="Select date"
+                                        textStyle={{ color: "green" }}
+                                        placeHolderTextStyle={{ color: "#d3d3d3" }}
+                                        onDateChange={this.setDate}
+                                        disabled={false}
+                                    />
                                 </Item>
+
                                 <Button iconLeft
                                         onPress={() => this.addDelegationName()}
 
                                 >
-                                    <Icon name='plus' />
+                                    <Icon name='paper' />
                                     <Text >הוספה למערכת</Text>
                                 </Button>
                             </Form>

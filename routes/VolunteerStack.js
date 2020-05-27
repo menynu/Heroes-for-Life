@@ -6,9 +6,15 @@ import Information from '../screens/Information';
 const screens ={
     VolunteerScreen:{
         screen:Volunteer,
+        navigationOptions:() =>({
+            title:'אזור מלגאים',
+        })
     },
     Information:{
         screen:Information,
+        navigationOptions:() =>({
+            title:'עידכון מידע על המועמד',
+        })
     }
 }
 

@@ -19,7 +19,7 @@ const styles = {
     paddingTop: 10,
     paddingBottom: 10,
   },
-  buttoStyle: {
+  buttonStyle: {
     flex: 1,
     alignSelf: 'stretch',
     backgroundColor: '#fff',

@@ -12,13 +12,22 @@ import  RegistrationForm from '../screens/RegistrationForm';
 const RootDrawerNavigator = createDrawerNavigator({
 
     HomeScreen:{
-        screen:HomeStack
+        screen:HomeStack,
+        navigationOptions:() =>({
+            title:'דף הבית'
+        })
     },
     LoginForm:{
-        screen:LoginForm
+        screen:LoginForm,
+        navigationOptions:() =>({
+            title:'מערכת מורשים'
+        })
     },
     RegistrationForm:{
-        screen:RegistrationForm
+        screen:RegistrationForm,
+        navigationOptions:() =>({
+            title:'טופס הרשמה'
+        })
     },
     Volunteer:{
         screen:VolunteerStack

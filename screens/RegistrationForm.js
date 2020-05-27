@@ -2,34 +2,12 @@
 import React, { Component } from 'react';
 import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View } from 'react-native';
 import firebase from '../database/firebaseDb';
-import { CheckBox } from 'react-native-elements'
 
-import RadioButton from '../components/RadioButton';
-
-
-const PROP = [
-  {
-    key: 'Male',
-    text: 'זכר',
-  },
-  {
-    key: 'Female',
-    text: 'נקבה',
-  },
-  // {
-  // 	key: 'motorola',
-  // 	text: 'Motorola',
-  // },
-  // {
-  // 	key: 'lenovo',
-  // 	text: 'Lenovo',
-  // },
-];
-
+import {Item, Picker} from "native-base";
 
 
 class RegistrationForm extends Component {
-  constructor() {
+    constructor() {
     super();
     this.dbRef = firebase.firestore().collection('delegation');
     this.state = {
@@ -43,6 +21,7 @@ class RegistrationForm extends Component {
       meetDate: '',
       meetTime: '',
       Status: '',
+      CameFrom:'',
       isLoading: false
     };
   }
@@ -65,7 +44,7 @@ class RegistrationForm extends Component {
         Destination: this.state.Destination,
         Email: this.state.Email,
         Gender: this.state.Gender,
-        //console.log("hey there");
+        //בעיה במגדר לתקן פונקציונאליות
         Age: this.state.Age,
         Location: this.state.Location,
         Mobile: this.state.Mobile,
@@ -74,7 +53,7 @@ class RegistrationForm extends Component {
         meetDate: '',
         meetTime: '',
         Status: '',
-        //value: res.key
+        CameFrom:this.state.CameFrom,
       }).then((res) => {
         this.setState({
           Name: '',
@@ -89,9 +68,11 @@ class RegistrationForm extends Component {
           meetDate: '',
           meetTime: '',
           Status: '',
+          CameFrom:'',
           isLoading: false,
         });
-        this.props.navigation.navigate('UserScreen')
+        alert("הרשמתך נקלטה בהצלחה");
+        this.props.navigation.navigate('HomeScreen')
       })
           .catch((err) => {
             console.error("Error found: ", err);
@@ -100,6 +81,18 @@ class RegistrationForm extends Component {
             });
           });
     }
+  }
+
+
+  onValueChangeG(value: string) {
+    this.setState({
+      Gender: value
+    });
+  }
+  onValueChangeC(value: string) {
+    this.setState({
+      CameFrom: value
+    });
   }
 
   render() {
@@ -141,35 +134,36 @@ class RegistrationForm extends Component {
                 onChangeText={(val) => this.inputValueUpdate(val, 'Email')}
             />
           </View>
-          {/* TODO: check box male/female */}
+
           <View style={styles.inputGroup}>
             <Text>מגדר</Text>
-            <RadioButton PROP={PROP} />
-            <CheckBox
-                center
-                title='Click Here'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={this.state.checked}
-                onPress={() => this.setState({checked: !this.state.checked})}
-            />
-            <TextInput
-                multiline={true}
-                numberOfLines={4}
-                placeholder={''}
-                value={this.state.Gender}
-                onChangeText={(val) => this.inputValueUpdate(val, 'Gender')}
-            />
+            <Item picker>
+              <Picker
+                  mode="dropdown"
+                  style={{ width: 20 }}
+                  placeholder="בחר מגדר"
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={this.state.Gender}
+                  onValueChange={this.onValueChangeG.bind(this)}
+              >
+                <Picker.Item label="בחר" value="" />
+                <Picker.Item label="זכר" value="זכר" />
+                <Picker.Item label="נקבה" value="נקבה" />
+                <Picker.Item label="אחר" value="אחר" />
+              </Picker>
+            </Item>
           </View>
+
+
           <View style={styles.inputGroup}>
             <Text>גיל</Text>
             <TextInput
                 placeholder={''}
-                value={this.state.mobile}
+                value={this.state.Age}
                 onChangeText={(val) => this.inputValueUpdate(val, 'Age')}
             />
           </View>
-          {/* TODO: scroll cities */}
           <View style={styles.inputGroup}>
             <Text>בחר אזור מגורים</Text>
             <TextInput
@@ -184,11 +178,10 @@ class RegistrationForm extends Component {
             <Text>מס' פלאפון</Text>
             <TextInput
                 placeholder={'פלאפון'}
-                value={this.state.mobile}
+                value={this.state.Mobile}
                 onChangeText={(val) => this.inputValueUpdate(val, 'Mobile')}
             />
           </View>
-          {/* TODO: text view input to some label */}
           <View style={styles.inputGroup}>
             <Text>ספר על עצמך</Text>
             <TextInput
@@ -199,7 +192,6 @@ class RegistrationForm extends Component {
                 onChangeText={(val) => this.inputValueUpdate(val, 'about_me')}
             />
           </View>
-          {/* TODO: check list */}
           <View style={styles.inputGroup}>
             <Text>שפות ומידת שליטה</Text>
             <TextInput
@@ -212,7 +204,25 @@ class RegistrationForm extends Component {
           </View>
           <View style={styles.inputGroup}>
             <Text>איך שמעת על העמותה</Text>
-
+            <Item picker>
+              <Picker
+                  mode="dropdown"
+                  style={{ width: 20 }}
+                  placeholder="איך שמעת על העמותה"
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={this.state.CameFrom}
+                  onValueChange={this.onValueChangeC.bind(this)}
+              >
+                <Picker.Item label="בחר" value="" />
+                <Picker.Item label="שמעתי מחבר" value="שמעתי מחבר" />
+                <Picker.Item label="פייסבוק" value="פייסבוק" />
+                <Picker.Item label=" כתבה בחדשות" value="כתבה בחדשות" />
+                <Picker.Item label="שלט חוצות" value="שלט חוצות" />
+                <Picker.Item label="הרצאה בקורס משתחררים" value="הרצאה בקורס משתחררים" />
+                <Picker.Item label="אחר" value="אחר" />
+              </Picker>
+            </Item>
           </View>
           <View style={styles.button} >
             <Button

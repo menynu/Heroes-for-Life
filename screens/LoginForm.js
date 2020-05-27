@@ -5,24 +5,18 @@ import { View } from 'native-base';
 import { DotIndicator } from 'react-native-indicators';
 import firebase from '../database/firebaseDb';
 
+
 class LoginForm extends Component {
+    static counter;
     constructor() {
         super();
-        //this.userPerm = firebase.firestore().collection('Users')
-        this.usersRef = firebase.firestore().collection('Users')
+        this.usersRef = firebase.firestore().collection('users')
         this.state = {
             email: "",
             password: "",
             loading: false
         }
     }
-
-    // addUserToFire() {
-    //     this.usersRef.add({
-    //         Uid: firebase.auth().currentUser.uid,
-    //         Username: this.state.username
-    //     })
-    // }
 
     onLoginSuccess() {
         firebase.auth().onAuthStateChanged((user) => {
@@ -32,7 +26,6 @@ class LoginForm extends Component {
             }
         })
         // when secsuss check if manager or voulnteer
-        //this.props.navigation.navigate('HomeScreen');
         this.setState({
             email: "",
             password: "",

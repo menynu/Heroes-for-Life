@@ -49,15 +49,11 @@ class Volunteer extends Component {
       userArr,
       isLoading: false,
       render(){
-        //  <Text> abc</Text>
-        //<Text > dasdasd </Text>
+
       }
     });
   }
-  //  changeView(){
-  //    this.setState({
-  //      viewOne: !this.state.viewOne
-  //    })
+
 
   render() {
     I18nManager.forceRTL(true);
@@ -77,7 +73,7 @@ class Volunteer extends Component {
           <ScrollView
               style= {styles.container}>
 
-            <Text style={{fontSize: 20, alignText: 'center'}}> דף המלגאים
+            <Text style={{fontSize: 20, textAlign: 'center'}}> דף המלגאים
             </Text>
 
             {
@@ -93,11 +89,6 @@ class Volunteer extends Component {
                           title={item.Name}
                           subtitle={item.Email}
                           onPress={() => this.props.navigation.navigate('Information',{userKey: item.key}) }
-                          // onPress={() => {
-                          //   console.log(item.key),
-                          //   this.props.navigation.navigate('Info',
-                          //   {userkey: item.key}
-                          //   );}}
                       />
                       <View>
 
