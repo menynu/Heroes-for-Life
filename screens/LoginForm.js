@@ -6,6 +6,8 @@ import { DotIndicator } from 'react-native-indicators';
 import firebase from '../database/firebaseDb';
 
 
+//import Volunteer from './Volunteer'; //added
+
 class LoginForm extends Component {
     static counter;
     constructor() {
@@ -14,6 +16,7 @@ class LoginForm extends Component {
         this.state = {
             email: "",
             password: "",
+            delegation: '',
             loading: false
         }
     }
@@ -28,11 +31,15 @@ class LoginForm extends Component {
 
                         querySnapshot.forEach(documentSnapshot => {
                             if(user.email===documentSnapshot.data().email){
+                                // console.log('testing user delegation: ', documentSnapshot.data().delegation)
                                 if(documentSnapshot.data().permission==="M"){
                                     this.props.navigation.navigate('AdminPage');
                                 }
                                 else{
-                                    this.props.navigation.navigate('Volunteer');
+                                    // console.log('testing user delegation: ', this.user.delegation)
+                                    let VolunteerDest = documentSnapshot.data().delegation;
+                                    console.log('testing user delegation: ', VolunteerDest)
+                                    this.props.navigation.navigate('Volunteer', {userDelegation: VolunteerDest});
                                 }
                             }
                         });
