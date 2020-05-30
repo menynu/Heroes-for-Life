@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View,ScrollView ,SafeAreaView } from 'react-native';
-import { Container, DatePicker, Content,Button, Icon, Form,Text, Item, Input, Label} from 'native-base';
+import {Container, DatePicker, Content, Button, Icon, Form, Text, Item, Input, Label, Picker} from 'native-base';
 import firebase from "../database/firebaseDb";
 import {Card} from "./common";
 // import {addUser,addDelegation} from'../src/api/UsersApi'
@@ -14,7 +14,7 @@ export default class AdminPage extends React.Component {
         super();
         this.dbRef = firebase.firestore().collection('users');
 
-        this.dbDelRef =  firebase.firestore().collection('delegationList');
+        this.dbListRef = firebase.firestore().collection('delegationList');
         this.state = {
             email: '',
             password:'',
@@ -23,10 +23,36 @@ export default class AdminPage extends React.Component {
             name: '',
             expiration:  new Date(),
             time: '',
-            isLoading: false
+            isLoading: false,
+            destinationArr: [],
         };
         this.setDate = this.setDate.bind(this);
 
+    }
+    componentDidMount() {
+        this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
+    }
+
+
+    componentWillUnmount(){
+        this.unsubscribe();
+    }
+
+    getDelegationList = (querySnapshot) =>{
+        const destinationArr = [];
+        querySnapshot.forEach((res) => {
+            const {name, expiration } = res.data();
+            destinationArr.push({
+                key: res.id,
+                res,
+                name,
+                expiration,
+            });
+        });
+        this.setState({
+            destinationArr,
+            // isLoading: false,
+        });
     }
 
     delegationNameUpdate = (val,prop) => {
@@ -91,16 +117,16 @@ export default class AdminPage extends React.Component {
             firebase.auth().createUserWithEmailAndPassword(email,password)
                 .then(
                     this.dbRef.add({
-                    email: this.state.email,
-                    delegation: this.state.delegation,
-                    permission: this.state.permission,
+                        email: this.state.email,
+                        delegation: this.state.delegation,
+                        permission: this.state.permission,
                     }),
                     this.setState({
-                    email: '',
-                    password:'',
-                    delegation: '',
-                    permission: '',
-                    isLoading: false,
+                            email: '',
+                            password:'',
+                            delegation: '',
+                            permission: '',
+                            isLoading: false,
                         }
                     )
                 )
@@ -117,127 +143,159 @@ export default class AdminPage extends React.Component {
     render() {
         return (
             <SafeAreaView>
+
                 <ScrollView>
-                    <Container>
-                        <Content>
-                        <Card>
-                            <Form>
-                                <Text style={{fontSize:24}}> לרישום משתמש במערכת:</Text>
-                                <Item floatingLabel>
-                                    <Label>אימייל</Label>
-                                    <Input
-                                        placeholder={'email'}
-                                        value={this.state.email}
-                                        onChangeText={(val) => this.inputValueUpdate(val, 'email')}
-                                    />
 
-                                </Item>
-                                <Item floatingLabel last>
-                                    <Label>סיסמא ראשונית</Label>
-                                    <Input
-                                        placeholder={'password'}
-                                        value={this.state.password}
-                                        onChangeText={(val) => this.inputValueUpdate(val, 'password')}
+                                <Card>
+                                    <Form>
+                                        <Text style={{fontSize:24}}> לרישום משתמש במערכת:</Text>
+                                        <Item floatingLabel>
+                                            <Label>אימייל</Label>
+                                            <Input
+                                                placeholder={'Test@test.com'}
+                                                value={this.state.email}
+                                                onChangeText={(val) => this.inputValueUpdate(val, 'email')}
+                                            />
 
-                                    />
-                                </Item>
-                                <Item floatingLabel last>
-                                    <Label>שם משלחת</Label>
-                                    <Input
-                                        placeholder={'delegation'}
-                                        value={this.state.delegation}
-                                        onChangeText={(val) => this.inputValueUpdate(val, 'delegation')}
+                                        </Item>
+                                        <Item floatingLabel last>
+                                            <Label>סיסמא ראשונית</Label>
+                                            <Input
+                                                placeholder={'password'}
+                                                value={this.state.password}
+                                                onChangeText={(val) => this.inputValueUpdate(val, 'password')}
 
-                                    />
-                                </Item>
-                                <Item floatingLabel last>
-                                    <Label>מלגאי/מנהל</Label>
-                                    <Input
-                                        placeholder={'M/V'}
-                                        value={this.state.permission}
-                                        onChangeText={(val) => this.inputValueUpdate(val, 'permission')}
+                                            />
+                                        </Item>
+                                        <Item floatingLabel last>
+                                            <Label>שם משלחת</Label>
+                                            <Input
+                                                placeholder={'india 2020'}
+                                                value={this.state.delegation}
+                                                onChangeText={(val) => this.inputValueUpdate(val, 'delegation')}
+
+                                            />
+                                        </Item>
+                                        <Item floatingLabel last>
+                                            <Label>מלגאי/מנהל</Label>
+                                            <Input
+                                                placeholder={'M/V'}
+                                                value={this.state.permission}
+                                                onChangeText={(val) => this.inputValueUpdate(val, 'permission')}
 
 
-                                    />
+                                            />
 
-                                </Item>
-                                <Button iconLeft
-                                        onPress={() => this.addVolunteer()}
-                                >
-                                    <Icon name='paper' />
-                                    <Text>הוספה למערכת</Text>
-                                </Button>
-                            </Form>
-                        </Card>
-                            <Card>
-                            <Form>
-                                <Text style={{fontSize:24}}> להוספת משלחת:</Text>
-                                <Item floatingLabel>
-                                    <Label>שם משלחת:</Label>
-                                    <Input
-                                        placeholder={'שם המשלחת'}
-                                        value={this.state.name}
-                                        onChangeText={(val) => this.delegationNameUpdate(val, 'name')}
+                                        </Item>
+                                        <Button iconLeft
+                                                onPress={() => this.addVolunteer()}
+                                        >
+                                            <Icon name='paper' />
+                                            <Text>הוספת משתמש חדש למערכת</Text>
+                                        </Button>
+                                    </Form>
+                                </Card>
 
-                                    />
-                                </Item>
-                                <Item >
-                                    <Text>תאריך סגירת המשלחת:</Text>
-                                    <DatePicker
-                                        defaultDate={new Date(2020, 8, 1)}
-                                        minimumDate={new Date(2020, 8, 1)}
-                                        maximumDate={new Date(2030, 12, 31)}
-                                        locale={"en"}
-                                        timeZoneOffsetInMinutes={undefined}
-                                        modalTransparent={false}
-                                        animationType={"fade"}
-                                        androidMode={"default"}
-                                        placeHolderText="Select date"
-                                        textStyle={{ color: "green" }}
-                                        placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                        onDateChange={this.setDate}
-                                        disabled={false}
-                                    />
-                                </Item>
+                                <Card>
+                                    <Form>
+                                        <Text style={{fontSize:24}}> להוספת משלחת:</Text>
+                                        <Item floatingLabel>
+                                            <Label>שם משלחת:</Label>
+                                            <Input
+                                                placeholder={'שם המשלחת'}
+                                                value={this.state.name}
+                                                onChangeText={(val) => this.delegationNameUpdate(val, 'name')}
 
-                                <Button iconLeft
-                                        onPress={() => this.addDelegationName()}
+                                            />
+                                        </Item>
+                                        <Item >
+                                            <Text>תאריך סגירת המשלחת:</Text>
+                                            <DatePicker
+                                                defaultDate={new Date(2020, 8, 1)}
+                                                minimumDate={new Date(2020, 8, 1)}
+                                                maximumDate={new Date(2030, 12, 31)}
+                                                locale={"en"}
+                                                timeZoneOffsetInMinutes={undefined}
+                                                modalTransparent={false}
+                                                animationType={"fade"}
+                                                androidMode={"default"}
+                                                placeHolderText="Select date"
+                                                textStyle={{ color: "green" }}
+                                                placeHolderTextStyle={{ color: "#d3d3d3" }}
+                                                onDateChange={this.setDate}
+                                                disabled={false}
+                                            />
+                                        </Item>
 
-                                >
-                                    <Icon name='paper' />
-                                    <Text >הוספה למערכת</Text>
-                                </Button>
-                            </Form>
-                            </Card>
+                                        <Button iconLeft
+                                                onPress={() => this.addDelegationName()}
 
-                            <Card>
-                            <Form>
-                                <Text style={{fontSize:24}}>הנפקת דוחות</Text>
-                                <Button iconLeft onPress={() =>{this.props.navigation.navigate('Report1')}}>
-                                    <Icon name='paper' />
-                                    <Text>לקבלת דוח שבועי לפי משלחת לחץ כאן</Text>
-                                </Button>
-                                <Button iconLeft onPress={() => {this.props.navigation.navigate('Report2')}}>
-                                    <Icon name='paper' />
-                                    <Text>לקבלת דוח איזורים לפי משלחת לחץ כאן</Text>
-                                </Button>
-                                <Button iconLeft onPress={() => {this.props.navigation.navigate('Report3')}}>
-                                    <Icon name='paper' />
-                                    <Text>לקבלת דוח איזורים על איך שמעת על העמותה לחץ כאן</Text>
-                                </Button>
-                                <Button iconLeft onPress={()=>{this.props.navigation.navigate('Report4')}}>
-                                    <Icon name='paper' />
-                                    <Text>לקבלת דוח כללי כללי לחץ כאן</Text>
-                                </Button>
+                                        >
+                                            <Icon name='paper' />
+                                            <Text >הוספת משלחת למערכת</Text>
+                                        </Button>
+                                    </Form>
+                                </Card>
 
-                            </Form>
-                            </Card>
-                        </Content>
-                    </Container>
+                                <Card>
+                                    <Form>
+                                        <Text style={{fontSize:24}}> לעדכון משלחת קיימת:</Text>
+                                        <Item floatingLabel>
+                                            <Label>בחר משלחת</Label>
+                                        </Item>
+                                        <Item picker>
+                                            <Picker
+                                                mode="dropdown"
+                                                style={{ width: 20 }}
+                                                placeholder="choose destination"
+                                                placeholderStyle={{ color: "#bfc6ea" }}
+                                                placeholderIconColor="#007aff"
+                                                selectedValue={this.state.delegation}
+                                                onValueChange={ (value) => ( this.setState({delegation: value}) ) } >
+                                                <Picker.Item label="בחר" value="" />
+                                                {
+                                                    this.state.destinationArr.map( (city, i) => {
+
+                                                        return <Picker.Item label={city.name} value={city.name} key={i} />
+                                                    })
+                                                }
+                                            </Picker>
+                                        </Item>
+
+                                        <Button iconLeft
+                                                onPress={() => this.addVolunteer()}
+                                        >
+                                            <Icon name='paper' />
+                                            <Text>הוספה למערכת</Text>
+                                        </Button>
+                                    </Form>
+
+                                </Card>
+
+
+                                <Card>
+                                        <Text style={{fontSize:24}}>הנפקת דוחות</Text>
+                                        <Button iconLeft onPress={() =>{this.props.navigation.navigate('Report1')}}>
+                                            <Icon name='paper' />
+                                            <Text>לקבלת דוח שבועי לפי משלחת לחץ כאן</Text>
+                                        </Button>
+                                        <Button iconLeft onPress={() => {this.props.navigation.navigate('Report2')}}>
+                                            <Icon name='paper' />
+                                            <Text>לקבלת דוח איזורים לפי משלחת לחץ כאן</Text>
+                                        </Button>
+                                        <Button iconLeft onPress={() => {this.props.navigation.navigate('Report3')}}>
+                                            <Icon name='paper' />
+                                            <Text>לקבלת דוח איזורים על איך שמעת על העמותה לחץ כאן</Text>
+                                        </Button>
+                                        <Button iconLeft onPress={()=>{this.props.navigation.navigate('Report4')}}>
+                                            <Icon name='paper' />
+                                            <Text>לקבלת דוח כללי כללי לחץ כאן</Text>
+                                        </Button>
+                                </Card>
+
                 </ScrollView>
+
             </SafeAreaView>
-
-
         );
     }
 }
@@ -254,3 +312,4 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
     }
 });
+
