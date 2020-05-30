@@ -2,14 +2,14 @@
 import React, { Component } from 'react';
 import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View } from 'react-native';
 import firebase from '../database/firebaseDb';
-
 import {Item, Picker} from "native-base";
 
 
 class RegistrationForm extends Component {
-    constructor() {
-    super();
+    constructor(props) {
+    super(props);
     this.dbRef = firebase.firestore().collection('delegation');
+    this.dbListRef = firebase.firestore().collection('delegationList');
     this.state = {
       Name: '',
       Destination: '',
@@ -22,9 +22,39 @@ class RegistrationForm extends Component {
       meetTime: '',
       Status: '',
       CameFrom:'',
-      isLoading: false
+      isLoading: false,
+      selectedDest: 'בחר משלחת',
+      destinationArr: [],
     };
   }
+  componentDidMount() {
+    this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
+
+  }
+
+
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
+
+
+  getDelegationList = (querySnapshot) =>{
+    const destinationArr = [];
+    querySnapshot.forEach((res) => {
+      const {name, expiration } = res.data();
+      destinationArr.push({
+        key: res.id,
+        res,
+        name,
+        expiration,
+      });
+    });
+    this.setState({
+      destinationArr,
+      isLoading: false,
+    });
+  }
+
 
   inputValueUpdate = (val, prop) => {
     const state = this.state;
@@ -96,6 +126,7 @@ class RegistrationForm extends Component {
   }
 
   render() {
+
     if(this.state.isLoading){
       return(
           <View style={styles.preloader}>
@@ -113,16 +144,32 @@ class RegistrationForm extends Component {
                 onChangeText={(val) => this.inputValueUpdate(val, 'Name')}
             />
           </View>
-          <View style={styles.inputGroup}>
-            <Text> יעד המשלחת</Text>
-            <TextInput
-                multiline={true}
-                numberOfLines={4}
-                placeholder={'יעד'}
-                value={this.state.Destination}
-                onChangeText={(val) => this.inputValueUpdate(val, 'Destination')}
-            />
+          <View>
+            <View style={styles.inputGroup}>
+              <Text>יעד המשלחת</Text>
+              <Item picker>
+                <Picker
+                    mode="dropdown"
+                    style={{ width: 20 }}
+                    placeholder="choose destination"
+                    placeholderStyle={{ color: "#bfc6ea" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.Destination}
+                    onValueChange={ (value) => ( this.setState({Destination: value}) ) } >
+                <Picker.Item label="בחר" value="" />
+                {
+                  this.state.destinationArr.map( (city, i) => {
+
+                    return <Picker.Item label={city.name} value={city.name} key={i} />
+                  })
+                }
+              </Picker>
+              </Item>
+            </View>
           </View>
+
+
+
           {/* TODO: validation exist mail */}
           <View style={styles.inputGroup}>
             <Text>אימייל</Text>
