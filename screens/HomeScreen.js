@@ -1,38 +1,195 @@
 import React, { Component } from 'react';
-import { Button,Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Button,Image, Platform, StyleSheet, Text, TouchableOpacity, View, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Card, CardSection } from './common';
+import { withTheme } from 'react-native-elements';
+// import Video from 'react-native-video';
 
-import {Header,Left,Right,Icon} from 'native-base';
+
+
 
 export default class HomeScreen extends Component {
+    
     render(){
         return (
-        <View>
-            <Header>
-                <Left>
-                    <Icon name='menu'  onPress={() => this.props.navigation.openDrawer()}/>
-                </Left>
-            </Header>
-            <ScrollView>
+
+        <View style= {{flex: 1, backgroundColor: "white"}}>
+            <View style={styles.headerTitle}>
+                <Image source={require('./pics/hflCustom.png')} style={styles.HomeScreenLogo}
+                       style={{
+                           marginTop: 5,
+                           marginBottom: 5,
+                           resizeMode: 'contain',
+                           flex: 1,
+                           justifyContent: 'center',
+                           alignItems: 'center',
+                           width: '100%',
+                           height: '100%',
+                       }}
+                />
+            </View> 
+
+        <ScrollView>
             <View>
-            <Text style={{fontSize:40,color:'blue',marginTop:50}}>לוחמים ללא גבולות</Text>
+                <Card>
+                    <View>
+                        <ImageBackground source={require('./pics/introBackground.jpg')} style={styles.introBackground}>
+
+                        <View><Text> </Text></View>
+                        <View><Text> </Text></View>
+                        
+
+                        <CardSection>
+                            <Text style={styles.textTitle}>לוחמים ללא גבולות</Text>
+                            <Text style={styles.line}>__________________</Text>
+                            <View><Text> </Text></View>
+                        </CardSection>
+
+                        <View style={styles.messageBox}>
+                            <CardSection >
+                                <Text style={styles.textMessage}>ניתן להירשם כעת גם למשלחות החדשות, כאן בישראל!!</Text>
+                            </CardSection>
+                        </View>
+
+                        <View style={styles.signUp}>
+                            <CardSection>
+                                <Button 
+                                    onPress={() => this.props.navigation.navigate('RegistrationForm')}
+                                    title="     להתנדבות     "
+                                    color = "#31c5c7"
+                                /> 
+                            </CardSection>
+                        </View>
 
 
-            <Text style={{fontSize:26}}>ניתן להירשם כעת גם למשלחות החדשות, כאן בישראל!!</Text>
+                        <Text> </Text>
+                        <Text> </Text>
+                        <Text> </Text>
+                        <Text> </Text>
 
-                <Text style={{fontSize:24}}>מי אנחנו?</Text>
-            <Text> עמותת "לוחמים ללא גבולות" הינה עמותה ישראלית ציונית הפועלת למנף את התשתית העצומה של עשרות אלפי תרמילאים ישראלים בוגרי צבא המטיילים במדינות העולם השלישי לטובת התנדבות הומניטארית כחול לבן במדינות אלו כחלק מ"הטיול הגדול"</Text>
+                        </ImageBackground>
+                    </View>
+                </Card>
 
-            <Text>העמותה הוקמה בשנת 2013 בידי שלושה קצינים בוגרי יחידת דובדבן אשר טיילו במזרח הרחוק ונחשפו לכמות הבלתי נתפסת של ישראלים המטיילים במדינות העולם השלישי במהלך "הטיול הגדול" (כמות הנאמדת בכ450,000 תרמילאים מדי עשור). המחשבה הייתה כי אם נשכיל למנף תשתית עצומה זו נוכל לעשות המון טוב וגם להציג את פניה היפות והאמיתיות של ישראל ובוגרי צה"ל בעולם.</Text>
+                <Card>
+                    <View>
+                        <ImageBackground source={require('./pics/israelFlag.jpg')} style={styles.introBackground}>
+                            <View style={styles.aboutContainer}>
+                                <CardSection>
+                                    <Text></Text>
+                                    <Text></Text>
+                                    <Text style={styles.textWho}>מי אנחנו?</Text>
+                                    <Text style={styles.line}>__________________</Text>
+                                </CardSection>
+
+                                <CardSection>
+                                    <Text style={styles.textAbout1}>עמותת "לוחמים ללא גבולות" הינה עמותה ישראלית ציונית הפועלת למנף את התשתית העצומה של עשרות אלפי תרמילאים ישראלים בוגרי צבא המטיילים במדינות העולם השלישי לטובת התנדבות הומניטארית כחול לבן במדינות אלו כחלק מ"הטיול הגדול"</Text>
+
+                                    <Text style = {styles.textAbout2}>העמותה הוקמה בשנת 2013 בידי שלושה קצינים בוגרי יחידת דובדבן אשר טיילו במזרח הרחוק ונחשפו לכמות הבלתי נתפסת של ישראלים המטיילים במדינות העולם השלישי במהלך "הטיול הגדול" (כמות הנאמדת בכ450,000 תרמילאים מדי עשור). המחשבה הייתה כי אם נשכיל למנף תשתית עצומה זו נוכל לעשות המון טוב וגם להציג את פניה היפות והאמיתיות של ישראל ובוגרי צה"ל בעולם.</Text>
+                                </CardSection>
+                            </View>    
+                        </ImageBackground>
+                    </View>
+                </Card>
+
+                <Card>
+                    <View>
+                        <CardSection>
+                            <Button
+                                onPress={() => this.props.navigation.navigate('LoginForm')}
+                                title="כניסה למורשים"
+                                color = "#31c5c7"
+                            />
+                        </CardSection>
+                    </View>
+                </Card>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Button onPress={() => this.props.navigation.navigate('RegistrationForm')} title="להגשת מועמדות"/> 
-            </View>
-            <View> 
-                <Button onPress={() => this.props.navigation.navigate('LoginForm')} title="כניסה למורשים"/>
-            </View>
-            </ScrollView>
+            
+
+        </ScrollView>
         </View>
+
         );
     }
 }
+const styles = StyleSheet.create({
+    backgroundImage: {
+        width: '100%',
+        height: '100%',
+        flexDirection: 'row',
+    },
+    introBackground: {
+
+    },
+    headerTitle: {
+        flexDirection: 'row',
+        height: 50,
+        backgroundColor: "white"
+    },
+    line: {
+        color: "#e0ebeb",
+        fontSize: 20,
+        textAlign: 'center',
+    },
+    HomeScreenImage: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        resizeMode: "contain",
+        width: '48%',
+        height: 70,
+        marginHorizontal: '24%',
+    },
+    HomeScreenLogo: {
+        resizeMode: "contain",
+        width: '48%',
+        height: 50,
+        marginHorizontal: '61.5%',
+    },
+    textTitle: {
+        fontSize:40,
+        marginLeft: 20 ,
+        color:'#31c5c7',
+        fontWeight: "bold",
+        marginTop:50,
+        fontFamily: 'Roboto'
+    },
+    textMessage: {
+        color: 'white',
+        fontSize:26,
+        alignContent: 'center',
+        includeFontPadding: true,
+        textAlign: 'center',
+    },
+    messageBox: {
+        alignItems: 'center',
+        },
+    signUpButton: {
+        marginTop: 20,
+        padding: 20,
+        },
+    signUp: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        },
+    aboutContainer: {
+            marginHorizontal: 25
+        },
+    textWho: {
+        fontWeight: "bold",
+        fontSize: 30,
+        color: "black",
+        textAlign: 'center',
+    },
+    textAbout1: {
+        color: "black",
+        fontSize: 26,
+        flex: 1,
+        textAlign: 'justify',
+    },
+    textAbout2: {
+        color: "black",
+        fontSize: 23,
+        textAlign: 'justify',
+    },
+});
