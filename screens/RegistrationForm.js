@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View } from 'react-native';
 import firebase from '../database/firebaseDb';
 import {Item, Picker} from "native-base";
+import cities from './cities/cities'
 
 
 class RegistrationForm extends Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
     this.dbRef = firebase.firestore().collection('delegation');
-    this.dbListRef = firebase.firestore().collection('delegationList');
+    this.dbListRef = firebase.firestore().collection("delegationList").orderBy("name", "desc");
     this.state = {
       Name: '',
       Destination: '',
@@ -20,39 +21,88 @@ class RegistrationForm extends Component {
       Mobile: '',
       meetDate: '',
       meetTime: '',
+      about_me: '',
+      lang_support: '',
       Status: '',
-      CameFrom:'',
+      CameFrom: '',
       isLoading: false,
       selectedDest: 'בחר משלחת',
       destinationArr: [],
+      cityArea: [],
     };
+
   }
+
   componentDidMount() {
     this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
+    //this.unsubscribe = this.dbRef.onSnapshot(this.emailValidation);
 
   }
 
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribe();
   }
 
 
+  emailValidation = (querySnapshot) => {
+    //const destinationArr = [];
+    this.dbRef.onSnapshot
+        .where('Email', '==', this.state.Email)
+        .get() // .where('Gender', '==', 'male')
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            if (doc.data().Email == this.state.Email)
+              alert('המייל שרשמת כבר  קיים במערכת עבור המשלחת')
+
+            console.log('num of people  ', querySnapshot.size)
+
+            //console.log('none from: ', doc.data().Location)
+            //console.log('test for array:: ', this.state.cityName)
+
+
+          });
+
+
+        })
+
+
+  }
+
+
+
+    // querySnapshot.forEach((res) => {
+    //   const {Email, Destination } = res.data();
+    //   destinationArr.push({
+    //     key: res.id,
+    //     res,
+    //     name,
+    //     //expiration,
+    //   });
+    // });
+    // this.setState({
+    //   destinationArr,
+    //   isLoading: false,
+    // });
+ // }
+
   getDelegationList = (querySnapshot) =>{
     const destinationArr = [];
     querySnapshot.forEach((res) => {
-      const {name, expiration } = res.data();
+      const {name } = res.data();
+      if (res.data().isActive)
       destinationArr.push({
         key: res.id,
         res,
         name,
-        expiration,
+
       });
     });
     this.setState({
       destinationArr,
       isLoading: false,
     });
+
   }
 
 
@@ -63,14 +113,23 @@ class RegistrationForm extends Component {
   }
 
   storeDelegation() {
-    if(this.state.Name === ''){
-      alert('אנא הכנס שם תקין')
-    } else {
+
+
+    if(this.state.Name === '' || this.state.Email == '' || this.state.Gender == '' || this.state.Age == '' || this.state.Location == '' || this.state.Mobile == '') {
+      alert('אנא מלא את כל הפרטים')
+
+
+    }
+
+    //else if (this.dbRef.onSnapshot(this.emailValidation)){console.log('before email valid')}
+   // this.emailValidation()
+    else {
+      console.log('after email valid')
       this.setState({
         isLoading: true,
       });
       this.dbRef.add({
-        Name: this.state.Name,
+        Name: this.state.Name ,
         Destination: this.state.Destination,
         Email: this.state.Email,
         Gender: this.state.Gender,
@@ -84,6 +143,7 @@ class RegistrationForm extends Component {
         meetTime: '',
         Status: '',
         CameFrom:this.state.CameFrom,
+        regTime: new Date(),
       }).then((res) => {
         this.setState({
           Name: '',
@@ -111,6 +171,7 @@ class RegistrationForm extends Component {
             });
           });
     }
+
   }
 
 
@@ -141,8 +202,11 @@ class RegistrationForm extends Component {
             <TextInput
                 placeholder={'שם מלא'}
                 value={this.state.Name}
+                maxLength={16}
                 onChangeText={(val) => this.inputValueUpdate(val, 'Name')}
             />
+
+
           </View>
           <View>
             <View style={styles.inputGroup}>
@@ -213,13 +277,26 @@ class RegistrationForm extends Component {
           </View>
           <View style={styles.inputGroup}>
             <Text>בחר אזור מגורים</Text>
-            <TextInput
-                multiline={true}
-                numberOfLines={4}
-                placeholder={'אזור מגורים'}
-                value={this.state.Location}
-                onChangeText={(val) => this.inputValueUpdate(val, 'Location')}
-            />
+            <Item picker>
+              <Picker
+                  mode="dropdown"
+                  style={{ width: 20 }}
+                  placeholder="בחר עיר מגורים"
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={this.state.Location}
+                  onValueChange={ (value) => ( this.setState({Location: value}) ) } >
+                <Picker.Item label="בחר" value="" />
+                {
+                  this.state.cityArea = cities.map( (city, i) => {
+
+                    return <Picker.Item label={city.name} value={city.name} key={i} />
+                  })
+                }
+              </Picker>
+            </Item>
+
+
           </View>
           <View style={styles.inputGroup}>
             <Text>מס' פלאפון</Text>
