@@ -6,8 +6,6 @@ import Information from './Information';
 import {Card} from './common'
 
 
-
-
 class Volunteer extends Component {
 
   constructor(props) {
@@ -22,7 +20,6 @@ class Volunteer extends Component {
     };
 
   }
-
 
 
 
@@ -41,9 +38,10 @@ class Volunteer extends Component {
             });
       }
     })
-    //console.log('test#123##: ' ,firebase.firestore().collection('delegation').doc(this.props.navigation.state.params.userDelegation))
-    //firebase.firestore().collection('delegation').doc(this.props.navigation.state.params.userDelegation)
-    //console.log('test the param: ' , this.props.navigation.state.params.userDelegation)
+    // this.setState(
+    //     userDest
+    // )
+
     this.unsubscribe = this.firestoreRef.onSnapshot(this.getCollection);
   }
 
@@ -55,19 +53,9 @@ class Volunteer extends Component {
 
 
   getCollection = (querySnapshot) => {
-    //this.getUserDelegation();
-
-
 
     const userArr = [];
-    // let userDel = '';
-    // if (this.props.navigation.state.params){
-    //   userDel=this.props.navigation.state.params.userDelegation;
-    //   console.log('i reached here with', userDel)
-    // }
-    //console.log('testing: ', this.props.navigation.state.getParam(userDelegation))
-    // const id = this.props.navigation.getParam('userDelegation');
-    // console.log('testing user delegation:!! #', id);
+
     querySnapshot.forEach((res) => {
       //if (res.data().Destination == this.props.navigation.state.params.userDelegation)
       const { Name, Email, Mobile, Gender, Location, about_me, lang_support, meetDate, meetTime, Status } = res.data();
@@ -97,6 +85,21 @@ class Volunteer extends Component {
     });
   }
 
+
+  getColor = (item) => {
+    switch (item.Status) {
+      case 'לא ענה (1)':
+        return "yellow"
+      case 'לא ענה (2)':
+        return "yellow"
+      case 'לא ענה (3)':
+        return "yellow"
+      case 'לא רלוונטי':
+        return "red"
+      case 'ענה ומגיע':
+        return "green"
+    }
+  }
 
   render() {
     I18nManager.forceRTL(true);
@@ -128,28 +131,19 @@ class Volunteer extends Component {
                       <Card>
                       <ListItem
                           key={i}
-                          chevron
-                          pad={22}
+                          //chevron
+                          chevron={{ color: 'black'}}
+                          friction={90}
+                          activeScale={0.95}
+                          pad={1}
                           bottomDivider
+                          containerStyle={{backgroundColor: this.getColor(item)}}
                           title={<Text style={{fontSize: 20, textAlign: 'center'}}> שם המועמד:  {item.Name}</Text>}
                           subtitle={<Text style={{fontSize: 20, textAlign: 'center'}}> סטטוס:  {item.Status}</Text>}
+                          //style = {{ backgroundColor: 'red'}}
                           onPress={() => this.props.navigation.navigate('Information',{userKey: item.key}) }
                       />
 
-                      <View>
-
-                        <Text> שם: {item.Name}  </Text>
-                        <Text> טלפון: {item.Mobile} </Text>
-                        <Text> אימייל: {item.Email}  </Text>
-                        <Text> כתובת מגורים: {item.Location}  </Text>
-                        <Text> על עצמי: {item.about_me}   </Text>
-                        <Text> יעד משלחת: {item.Destination}  </Text>
-                        <Text>  שפות: {item.lang_support}  </Text>
-                        <Text> תאריך ראיון: {item.meetDate}  </Text>
-                        <Text> שעת ראיון: {item.meetTime} </Text>
-                        <Text> סטאטוס: {item.Status} </Text>
-
-                      </View>
                     </Card>
 
                     </View>
