@@ -25,6 +25,7 @@ export default class Report4 extends Component {
             //genderArr: [],
             delegation: '',
             cityTable: [],
+            fixedCityArr: [],
             tableData : [],
             tableData2:[],
             tableHead: ['שם משלחת', 'סכ"ה נרשמים מפתיחת ההרשמה', 'גברים שנרשמו מפתיחת ההרשמה', 'גברים שנרשמו מפתיחת ההרשמה באחוזים', 'נשים שנרשמו מפתיחת ההרשמה', 'נשים שנרשמו מפתיחת ההרשמה באחוזים1', 'נשים שנרשמו מפתיחת ההרשמה באחוזים'],
@@ -81,89 +82,76 @@ export default class Report4 extends Component {
 
     cityChecker(){
         let i = 0;
+        let waitflag = 0;
+        let tempName = 0;
+        let uniqueCity = [];
         const cityArr = [];
         console.log('WWWWWWWWWWWTTTTTTTTTTTTTTFFFFFFFFFFFFFFF!')
+        this.state.cityTable = [];
         this.dbRef
             .where('Destination', '==', this.state.delegation)
           //  .orderBy('Location','desc')
-            .get() // .where('Gender', '==', 'male')
+            .get()
             .then(querySnapshot=> {
                 querySnapshot.forEach(doc => {
-                    console.log('TESTING@#@$')
-                    //if (doc.data().Location != cityArr[i])
-                        cityArr.push({
+                    //console.log('TESTING@#@$')
+                    this.state.cityTable[i]=doc.data().Location;
+                    i++;
+                 //   console.log('state.cityTable[',i,']: ', state.cityTable[i], 'city: ', doc.data().Location)
+                    cityArr.push({
+
                             City: doc.data().Location,
                         })
-                    console.log('CITY ARRAY:! ',cityArr)
+                   // console.log('CITY ARRAY:! ',cityArr)
+                   // console.log('DATA SIZE:  ', querySnapshot.size)
+                   // console.log('STATE ARRAY:! ',this.state.cityTable)
+                    if(i==querySnapshot.size)
+                        this.fixCities()
+
                 });
             })
 
-        const cats = cityArr.map(q => q.city);
 
-        console.log(
-            cats.filter((q, idx) =>
-                cats.indexOf(q) === idx))
 
-       const result = [];
-        var unique = [];
-        var distinct = [];
-        for(let i = 0; i < cityArr.length; i++) {
-            if (!unique[cityArr[i].city] )
-                result.push(this[i]);
-            unique[cityArr[i].age] = 1;
-        }
-        console.log('result is: ', cityArr)
-        this.state.cityTable = cityArr;
+        console.log('result is: ', this.state.cityTable)
+        //this.state.cityTable = cityArr;
+        //this.fixCities()
+
+    }
+
+    fixCities() {
+        let unique = this.state.cityTable.filter((v, i, a) => a.indexOf(v) === i);
+        console.log('unique : test: ', unique)
 
     }
 
 
-//
-//     var result = [];
-//     loop1: for (var i = 0; i < array.length; i++) {
-//     var name = array[i].name;
-//     for (var i2 = 0; i2 < result.length; i2++) {
-//     if (result[i2] == name) {
-//     continue loop1;
-// }
-// }
-// result.push(name);
-// }
-
-    // var unique = [];
-    // var distinct = [];
-//     for( let i = 0; i < array.length; i++ ){
-//     if( !unique[array[i].age]){
-//     distinct.push(array[i].age);
-//     unique[array[i].age] = 1;
-// }
-// }
 
     getDelegationName = (querySnapshot) =>{
         const delegationName= [];
         let i = 0;
         const cityArr = [];
 
-            //this.dbRef.where('Location', '==', 'Jerusalem').get()//.where('Gender', '==', 'male').get()
-            this.dbRef.where('Destination', '==', this.state.delegation)
-                .orderBy("Location", "desc")
-                .get() // .where('Gender', '==', 'male')
-                .then(querySnapshot=> {
-                    querySnapshot.forEach(doc => {
-                        // if (doc.data().Location == 'eilat')
-                            console.log('TESTING@#@$')
-                            if (doc.data().Location != cityArr[i])
-                                cityArr.push({
-                                    City: doc.data().Location,
-                                })
-                           i++;
-
-                        console.log('CITY ARRAY:! ',cityArr)
-
-
-                    });
-                })
-
+            // //this.dbRef.where('Location', '==', 'Jerusalem').get()//.where('Gender', '==', 'male').get()
+            // this.dbRef.where('Destination', '==', this.state.delegation)
+            //     .orderBy("Location", "desc")
+            //     .get() // .where('Gender', '==', 'male')
+            //     .then(querySnapshot=> {
+            //         querySnapshot.forEach(doc => {
+            //             // if (doc.data().Location == 'eilat')
+            //                 console.log('TESTING@#@$')
+            //                 if (doc.data().Location != cityArr[i])
+            //                     cityArr.push({
+            //                         City: doc.data().Location,
+            //                     })
+            //                i++;
+            //
+            //             console.log('CITY ARRAY:! ',cityArr)
+            //
+            //
+            //         });
+            //     })
+            //
 
 
         querySnapshot.forEach((res)=>{
@@ -195,16 +183,16 @@ export default class Report4 extends Component {
     Generate(){
         this.state.tableData=this.state.tableData2;
         this.state.tableData=[]
-        this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'נקבה')
-            .where('regTime', '>', new Date() -1590681178 ).get()
-            .then(querySnapshot => {
-                // let precent = (querySnapshot.size * 100) / this.state.numOfReg;
-                // rowData.push(precent + '%');
-                // console.log((querySnapshot.size * 100) / this.state.numOfReg + "%")
-                console.log('FOUND!#@!@#')
-            })
+        // this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'נקבה')
+        //     .where('regTime', '>', new Date() -1590681178 ).get()
+        //     .then(querySnapshot => {
+        //         // let precent = (querySnapshot.size * 100) / this.state.numOfReg;
+        //         // rowData.push(precent + '%');
+        //         // console.log((querySnapshot.size * 100) / this.state.numOfReg + "%")
+        //         console.log('FOUND!#@!@#')
+        //     })
 
-        console.log('didnt FIND :(')
+       // console.log('didnt FIND :(')
         for (let i = 0; i < 1; i += 1) {
             let rowData = [];
             for (let j = 0; j < 6; j += 1) {
@@ -213,7 +201,8 @@ export default class Report4 extends Component {
                         rowData.push(this.state.delegation); // delegation name
                         break;
                     case 1:  //num of candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).get()
+                        this.dbRef.where('Destination', '==', this.state.delegation)
+                            .get()
                             .then(querySnapshot => {
                                 this.state.numOfReg = querySnapshot.size
                                 rowData.push(this.state.numOfReg)
@@ -221,7 +210,9 @@ export default class Report4 extends Component {
                             });
                         break;
                     case 2: //num of male candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'זכר').get()
+                        this.dbRef.where('Destination', '==', this.state.delegation)
+                            .where('Gender', '==', 'זכר')
+                            .get()
                             .then(querySnapshot => {
                                 this.state.numOfMale++;
                                 this.state.numOfMale = querySnapshot.size;
@@ -230,7 +221,9 @@ export default class Report4 extends Component {
                             });
                         break;
                     case 3: //present of male candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'זכר').get()
+                        this.dbRef.where('Destination', '==', this.state.delegation)
+                            .where('Gender', '==', 'זכר')
+                            .get()
                             .then(querySnapshot => {
                                 let precent = (querySnapshot.size* 100) / this.state.numOfReg;
                                 rowData.push(precent +'%');
@@ -239,7 +232,9 @@ export default class Report4 extends Component {
                         break;
                     case 4:
                         //num of female candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'נקבה').get()
+                        this.dbRef.where('Destination', '==', this.state.delegation)
+                            .where('Gender', '==', 'נקבה')
+                            .get()
                             .then(querySnapshot => {
                                 this.state.numOfFemale++;
                                 this.state.numOfFemale = querySnapshot.size
@@ -249,17 +244,23 @@ export default class Report4 extends Component {
                         break;
                     case 5:
                         //precent of female candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).where('Gender', '==', 'נקבה').get()
+                        this.dbRef.where('Destination', '==', this.state.delegation)
+                            .where('Gender', '==', 'נקבה')
+                            .get()
                             .then(querySnapshot => {
                                 let precent = (querySnapshot.size* 100) / this.state.numOfReg;
                                 rowData.push(precent +'%');
-                                console.log((querySnapshot.size * 100) / this.state.numOfReg + "%")
+                                console.log('######CASE 5: ', (querySnapshot.size * 100) / this.state.numOfReg + "%")
+                                //this.state.tableData.push(rowData);
                             });
                         break;
                    // case 6:
                 }
             }
+            console.log('this is before push!#!@#!@#')
             this.state.tableData.push(rowData);
+            this.setState(rowData)
+
         }
     //this.forceUpdate();
     }
@@ -283,7 +284,7 @@ export default class Report4 extends Component {
                         placeholderStyle={{color: "#bfc6ea"}}
                         placeholderIconColor="#007aff"
                         selectedValue={this.state.delegation}
-                        onValueChange={(value) => (this.setState({delegation: value}))}>
+                        onValueChange={(value) => {this.setState({delegation: value})} }>
                         <Picker.Item label="בחר" value=""/>
                         {
                             this.state.destinationArr.map((city, i) => {

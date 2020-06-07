@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View,ScrollView ,SafeAreaView } from 'react-native';
+import {StyleSheet, View, ScrollView, SafeAreaView, Switch} from 'react-native';
+import { CheckBox } from 'react-native-elements'
 import {Container, DatePicker, Content, Button, Icon, Form, Text, Item, Input, Label, Picker} from 'native-base';
 import firebase from "../database/firebaseDb";
 import {Card} from "./common";
+import {isTSTypeQuery} from "@babel/types";
 // import {addUser,addDelegation} from'../src/api/UsersApi'
 
 
@@ -14,7 +16,8 @@ export default class AdminPage extends React.Component {
         super();
         this.dbRef = firebase.firestore().collection('users');
 
-        this.dbListRef = firebase.firestore().collection('delegationList');
+        this.dbListRef = firebase.firestore().collection('delegationList')//.orderBy("name", "desc");
+            //.where('isActive', '==', 'true')
         this.state = {
             email: '',
             password:'',
@@ -23,8 +26,10 @@ export default class AdminPage extends React.Component {
             name: '',
             expiration:  new Date(),
             time: '',
+            isActive: true,
             isLoading: false,
             destinationArr: [],
+            currDocID: '',
         };
         this.setDate = this.setDate.bind(this);
 
@@ -42,6 +47,7 @@ export default class AdminPage extends React.Component {
         const destinationArr = [];
         querySnapshot.forEach((res) => {
             const {name, expiration } = res.data();
+            if (res.data().isActive) // remove this to get all delegations in DB
             destinationArr.push({
                 key: res.id,
                 res,
@@ -52,6 +58,12 @@ export default class AdminPage extends React.Component {
         this.setState({
             destinationArr,
             // isLoading: false,
+        });
+    }
+
+    onValueChangeC(value: string) {
+        this.setState({
+            CameFrom: value
         });
     }
 
@@ -80,13 +92,15 @@ export default class AdminPage extends React.Component {
             this.setState({
                 isLoading: true,
             });
-            this.dbDelRef.add({
+            this.dbListRef.add({
                 name: this.state.name,
-                expiration: this.state.expiration,
+                //expiration: this.state.expiration,
+                isActive: this.state.isActive,
             }).then((res) => {
                 this.setState({
                     name: '',
-                    expiration: '' ,
+                    //expiration: '' ,
+                    isActive: 'true',
                     isLoading: false
 
                 })
@@ -102,7 +116,23 @@ export default class AdminPage extends React.Component {
         }
     }
 
-
+    editDelegation(){
+        this.dbListRef.where('name', '==', this.state.delegation)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                    documentSnapshot.data().isActive='false';
+                    this.state.currDocID = documentSnapshot.id;
+                    console.log('after close ID: ', documentSnapshot.id, documentSnapshot.data());
+                })
+            });
+        // this.setDelegation()
+        //this.dbListRef.doc(this.state.currDocID).update({'isActive': false});
+    }
+    // setDelegation(){
+    //     this.dbListRef.doc(this.state.currDocID).update({'isActive': false});
+    // }
 
     addVolunteer() {
         if(this.state.email === '' ){
@@ -142,7 +172,7 @@ export default class AdminPage extends React.Component {
 
     render() {
         return (
-            <SafeAreaView>
+            <SafeAreaView style={{backgroundColor: 'white'}}>
 
                 <ScrollView>
 
@@ -167,26 +197,47 @@ export default class AdminPage extends React.Component {
 
                                 />
                             </Item>
-                            <Item floatingLabel last>
-                                <Label>שם משלחת</Label>
-                                <Input
-                                    placeholder={'india 2020'}
-                                    value={this.state.delegation}
-                                    onChangeText={(val) => this.inputValueUpdate(val, 'delegation')}
 
-                                />
+                            <Item picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: 20 }}
+                                    placeholder="choose destination"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.delegation}
+                                    onValueChange={ (value) => ( this.setState({delegation: value}) ) } >
+                                    <Picker.Item label="בחר משלחת" value="" />
+                                    {
+                                        this.state.destinationArr.map( (city, i) => {
+
+                                            return <Picker.Item label={city.name} value={city.name} key={i} />
+                                        })
+                                    }
+                                </Picker>
                             </Item>
-                            <Item floatingLabel last>
-                                <Label>מלגאי/מנהל</Label>
-                                <Input
-                                    placeholder={'M/V'}
-                                    value={this.state.permission}
-                                    onChangeText={(val) => this.inputValueUpdate(val, 'permission')}
 
+                            <View>
+                                <Label>מלגאי \ מנהל</Label>
+                            </View>
+                            <Item picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: 20 }}
+                                    placeholder="איך שמעת על העמותה"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.permission}
+                                    onValueChange={this.onValueChangeC.bind(this)}
+                                >
+                                    <Picker.Item label="בחר מלגאי \ מנהל" value="" />
+                                    <Picker.Item label="מלגאי" value="V" />
+                                    <Picker.Item label="מנהל" value="M" />
 
-                                />
-
+                                </Picker>
                             </Item>
+
+
                             <Button iconLeft
                                     onPress={() => this.addVolunteer()}
                             >
@@ -260,13 +311,46 @@ export default class AdminPage extends React.Component {
                                         })
                                     }
                                 </Picker>
-                            </Item>
 
+                                {/*<CheckBox*/}
+                                {/*    center*/}
+                                {/*    title='לחץ לסגירת משלחת'*/}
+                                {/*    iconRight*/}
+                                {/*    iconType='material'*/}
+                                {/*    checkedIcon='clear'*/}
+                                {/*    uncheckedIcon='add'*/}
+                                {/*    checkedColor='red'*/}
+                                {/*    checked={this.state.checked}*/}
+                                {/*/>*/}
+                            </Item>
+                            {/*<Switch*/}
+                            {/*  //  onValueChange = {props.toggleSwitch1}*/}
+                            {/*  //  value = {props.switch1Value}*/}
+                            {/*/>*/}
+
+
+                            {/*<Button iconLeft on press={() => this.editDelegation()} >*/}
                             <Button iconLeft
-                                    onPress={() => this.addVolunteer()}
+                                    onPress={() => this.dbListRef.where('name', '==', this.state.delegation)
+                                        .get()
+                                        .then(querySnapshot => {
+                                            querySnapshot.forEach(documentSnapshot => {
+                                                console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                                                //documentSnapshot.data().isActive='false';
+                                                //documentSnapshot.data().update({'isActive': false})
+                                                this.state.currDocID = documentSnapshot.id;
+                                                console.log('after close ID: ', documentSnapshot.id, documentSnapshot.data());
+                                            })
+                                            this.dbListRef.doc(this.state.currDocID).update({isActive: false})
+                                            console.log('updated!', this.state.currDocID);
+                                        })
+                                        //this.dbListRef.doc(this.state.currDocID).update(isActive: false))
+
+                                    }
+                                      //  .update('isActive' : false)}
                             >
                                 <Icon name='paper' />
-                                <Text>הוספה למערכת</Text>
+                                <Text>סגור משלחת</Text>
                             </Button>
                         </Form>
 

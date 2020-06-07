@@ -4,35 +4,29 @@ import { Table, Row } from 'react-native-table-component';
 import { Item, Label, Picker} from "native-base";
 import firebase from '../../database/firebaseDb';
 
-export default class Report1 extends Component {
+export default class Report2 extends Component {
 
     constructor(props) {
         super(props);
         this.dbRef = firebase.firestore().collection('delegation');
         this.firestoreRef = firebase.firestore().collection('delegation');
         this.dbListRef = firebase.firestore().collection('delegationList');
+
         this.state = {
-            numOfReg: '',
-            numOfMale: 0,
-            numOfFemale: 0,
-            locationName: [],
             delegationName: [],
             destinationArr: [],
-            currDelegation: '',
-            genderArr: [],
             delegation: '',
+            cityTable: [],
             tableData : [],
             tableData2:[],
-            tableHead: ['איזור', 'סכ"ה נרשמים'],
-            widthArr: [120, 60]
+            tableHead: ['שם המשלחת', 'נרשמים השבוע', 'סה"כ נרשמים', 'גברים שנרשמו השבוע' , 'נשים שנרשמו השבוע' , '% גברים שנרשמו השבוע', '% נשים שנרשמו השבוע'],
+            widthArr: [120, 80, 80, 80, 80, 80, 80]
         }
     }
 
-    componentDidMount() {
-        this.unsubscribe = this.firestoreRef.onSnapshot(this.getCityName);
-        this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
-        this.unsubscribe = this.firestoreRef.onSnapshot(this.getDelegationName);
 
+    componentDidMount() {
+        this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
     }
 
     componentWillUnmount(){
@@ -52,193 +46,180 @@ export default class Report1 extends Component {
         });
         this.setState({
             destinationArr,
-            // isLoading: false,
         });
     }
 
 
+
+// Method to get the list of cities
+    cityChecker(){
+        let i = 0;
+        const cityArr = [];
+        this.state.cityTable = [];
+        this.dbRef
+            .where('Destination', '==', this.state.delegation)
+            .get()
+            .then(querySnapshot=> {
+                querySnapshot.forEach(doc => {
+                    this.state.cityTable[i]=doc.data().Location;
+                    i++;
+                    cityArr.push({City: doc.data().Location})
+                    if(i==querySnapshot.size)
+                        this.fixCities()
+                });
+            })
+        // console.log('result is: ', this.state.cityTable)
+    }
+// Make the city unique / distinct
+    fixCities() {
+        let unique = this.state.cityTable.filter((v, i, a) => a.indexOf(v) === i);
+        // console.log('unique : test: ', unique)
+        this.state.cityTable = unique;
+    }
+
     getDelegationName = (querySnapshot) =>{
         const delegationName= [];
         const cityArr = [];
-        {
-            this.dbRef.where('Destination', '==', this.state.delegation).get()
-                .then(querySnapshot=> {
-                    querySnapshot.forEach(doc => {
-                        if (doc.data().Location == 'eilat')
-                        {
-                            console.log('i found jerusalem!!: ', doc.data().Location);
-                            console.log('num of people,', querySnapshot.size)
-                            cityArr.push({
-                                City: doc.data().Location,
-                            })
-
-                        }
-                        console.log('none from: ', doc.data().Location)
-                        // console.log('test 2:' , doc.id, '=>', doc.data());
-                        // console.log('location is : ', doc.data().Location);
-                        // Put here all the if / else / functions / states for the table values
-                    });
-                })
-
-
-
-        }
 
         querySnapshot.forEach((res)=>{
             const { Destination, Gender, Location, regTime, } = res.data();
 
             delegationName.push({
                 res,
-                numOfReg: querySnapshot.size, //querySnapshot.size = num of total in this query
                 Destination,
                 Gender,
                 Location,
                 regTime,
             });
-            console.log('destination123:' , Destination, 'Location: ',Location)
-
         });
 
 
         this.setState({
-            numOfReg: delegationName.length,
             delegationName: delegationName,
-            isLoading: false,
-        })
-    }
-
-    getCityName = () =>{
-        const cityArr = [];
-        {
-            this.dbRef.where('Destination', '==', this.state.delegation)
-                .get()
-                .then(querySnapshot=> {
-                    querySnapshot.forEach(doc => {
-                        console.log('num of people  ', querySnapshot.size)
-                        this.state.cityName.push({
-                            City: doc.data().Location,
-                        })
-                        cityArr.push(doc.data().Location);
-                        console.log('City NAME:',cityArr)
-                        console.log('none from: ', doc.data().Location)
-                        // console.log('test for array:',  this.state.cityName)
-                        // console.log('test 2:' , doc.id, '=>', doc.data());
-                        // console.log('location is : ', doc.data().Location);
-                        // Put here all the if / else / functions / states for the table values
-                    });
-
-
-                })
-
-
-        }
-        this.setState({
+            cityArr: cityArr,
             isLoading: false,
         })
     }
 
     Generate(){
-        const cityArr = [];
-        console.log("ENTER GENRATE");
-        this.dbRef.where('Destination', '==', this.state.delegation)
-            .get()
-            .then(querySnapshot=> {
-                querySnapshot.forEach((doc) => {
-                    cityArr.push(doc.data().Location);
-                });
-            })
-
-        for (let i = 0; i < cityArr.length; i += 1) {
-            console.log("before loop");
+        this.state.tableData=this.state.tableData2;
+        this.state.tableData=[]
+        // this.setState({tableData: rowData})
+        for (let i = 0; i < this.state.destinationArr.length; i += 1) {
             let rowData = [];
-            for (let j = 0; j < 2; j += 1) {
+            for (let j = 0; j < this.state.tableHead.length; j += 1) {
                 switch (j) {
-                    case 0:  //name of area
-                        this.dbRef.where('Destination', '==', this.state.delegation).get()
-                            .then(() => {
-                                rowData.push(cityArr[i])
-                                console.log("city1:",cityArr[i])
-                            });
+                    case 0: //draw destination
+                        rowData.push(this.state.destinationArr[i].name)
                         break;
-                    case 1: //num candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation).where('Location', '==', cityArr[i]).get()
+                    case 1:  //reg this week - **TODO: must be fixed
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .get()
                             .then(querySnapshot => {
-                                let numFromLocation = querySnapshot.size;
-                                rowData.push(numFromLocation);
-                                console.log(numFromLocation);
+                                rowData.push(querySnapshot.size)
                             });
                         break;
+                    case 2: //total reg
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .get()
+                            .then(querySnapshot => {
+                                rowData.push(querySnapshot.size)
+                            });
+                        break;
+                    case 3: //male this week - **TODO: must be fixed
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .where('Gender', '==', 'זכר')
+                            .get()
+                            .then(querySnapshot => {
+                                rowData.push(querySnapshot.size)
+                            });
+                        break;
+                    case 4: //female this week - **TODO: must be fixed
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .where('Gender', '==', 'נקבה')
+                            .get()
+                            .then(querySnapshot => {
+                                rowData.push(querySnapshot.size)
+                            });
+                        break;
+                    case 5: //% male this week  **TODO: must be fixed
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .get()
+                            .then(querySnapshot => {
+                                rowData.push(querySnapshot.size)
+                            });
+                        break;
+                    case 6: //% of female  **TODO: must be fixed
+                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                            .get()
+                            .then(querySnapshot => {
+                                rowData.push(querySnapshot.size)
+                            });
+                        break;
+
                 }
             }
+
             this.state.tableData.push(rowData);
+            // this.setState({tableData: rowData})
+
         }
-    // this.render();
+        // this.setState({tableData: rowData})
     }
 
     render(){
-        const state = this.state;
+        this.cityChecker();
         console.log(this.state)
-        return (
+        return <View style={styles.container}>
+            <View style={styles.headerTitle}>
 
+                <Text> דוח 1 </Text>
+                <Item floatingLabel>
+                    <Label>בחר משלחת</Label>
+                </Item>
 
-            <View style={styles.container}>
-                <View style={styles.headerTitle}>
+                {console.log('current delegation: ', this.state.delegation)}
+                <View>
+                    <Text>write here..</Text>
 
-                    <Text> דוח 4 </Text>
-                    <Item floatingLabel>
-                        <Label>בחר משלחת</Label>
-                    </Item>
-                    <Item picker>
-                        <Picker
-                            mode="dropdown"
-                            style={{ width: 20 }}
-                            placeholder="choose destination"
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={this.state.delegation}
-                            onValueChange={ (value) => ( this.setState({delegation: value}) ) } >
-                            <Picker.Item label="בחר" value="" />
-                            {
-                                this.state.destinationArr.map( (city, i) => {
+                    {
+                    }
 
-                                    return <Picker.Item label={city.name} value={city.name} key={i} />
-                                })
-                            }
-                        </Picker>
-                    </Item>
-                    {console.log('current delegation: ', this.state.delegation)}
-                    <View>
-                        <Text>write here..</Text>
-                    </View>
-                    <Button onPress={() => this.Generate()} title={ "הנפק" } />
 
 
                 </View>
-                <ScrollView horizontal={true} style={{marginTop:20}}>
-                    <View>
+                <Button onPress={() => {
+                    this.firestoreRef.onSnapshot(this.getDelegationName);
+                    this.Generate();
+                }} title={"הנפק"}/>
 
-                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                            <Row data={state.tableHead} widthArr={state.widthArr} style={styles.header} textStyle={styles.text}/>
-                        </Table>
-                        <ScrollView style={styles.dataWrapper}>
-                            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                                {
-                                    this.state.tableData.map((rowData, index) => (
-                                        <Row
-                                            key={index}
-                                            data={rowData}
-                                            widthArr={state.widthArr}
-                                            style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
-                                            textStyle={styles.text}
-                                        />
-                                    ))
-                                }
-                            </Table>
-                        </ScrollView>
-                    </View>
-                </ScrollView>
+
             </View>
-        )
+            <ScrollView horizontal={true} style={{marginTop: 20}}>
+                <View>
+
+                    <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                        <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header}
+                             textStyle={styles.text}/>
+                    </Table>
+                    <ScrollView style={styles.dataWrapper}>
+                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                            {
+                                this.state.tableData.map((rowData, index) => (
+                                    <Row
+                                        key={index}
+                                        data={rowData}
+                                        widthArr={this.state.widthArr}
+                                        style={[styles.row, index % 2 && {backgroundColor: '#F7F6E7'}]}
+                                        textStyle={styles.text}
+                                    />
+                                ))
+                            }
+                        </Table>
+                    </ScrollView>
+                </View>
+            </ScrollView>
+        </View>
     }
 }
 
@@ -251,39 +232,3 @@ const styles = StyleSheet.create({
 });
 
 
-
-
-
-
-//
-// getCityName = () =>{
-//     const cityArr = [];
-//     {
-//         this.dbRef.where('Destination', '==', this.state.delegation)
-//             .get()
-//             .then(querySnapshot=> {
-//                 querySnapshot.forEach(doc => {
-//                     console.log('num of people  ', querySnapshot.size)
-//                     this.state.cityName.push({
-//                         City: doc.data().Location,
-//                         Name: doc.data().Name,
-//                         Destination: doc.data().Destination,
-//                     })
-//                     cityArr.push(doc.data().Location);
-//                     console.log('City NAME:',cityArr)
-//                     console.log('none from: ', doc.data().Location)
-//                     // console.log('test for array:',  this.state.cityName)
-//                     // console.log('test 2:' , doc.id, '=>', doc.data());
-//                     // console.log('location is : ', doc.data().Location);
-//                     // Put here all the if / else / functions / states for the table values
-//                 });
-//
-//
-//             })
-//
-//
-//     }
-//     this.setState({
-//         isLoading: false,
-//     })
-// }
