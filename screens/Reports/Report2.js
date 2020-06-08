@@ -19,6 +19,7 @@ export default class Report2 extends Component {
             cityTable: [],
             tableData : [],
             tableData2:[],
+            key: '',
             tableHead: ['שם העיר', 'נרשמים השבוע', 'סה"כ נרשמים'],
             widthArr: [120, 120, 120]
         }
@@ -185,10 +186,18 @@ export default class Report2 extends Component {
                     this.Generate();
                 }} title={"הנפק"}/>
 
+                <Button
+
+                    onPress={() => {
+                        this.setState({ temp: this.state.temp + 1 });
+                    }}
+                    title={"הצג נתונים"}/>
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
-                <View>
+                <View
+                    key={this.state.key}
+                >
 
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                         <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header}

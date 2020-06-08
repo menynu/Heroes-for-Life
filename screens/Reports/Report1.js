@@ -18,7 +18,8 @@ export default class Report2 extends Component {
             delegation: '',
             cityTable: [],
             tableData : [],
-            tableData2:[],
+            key: '',
+            //tableData2:[],
             tableHead: ['שם המשלחת', 'נרשמים השבוע', 'סה"כ נרשמים', 'גברים שנרשמו השבוע' , 'נשים שנרשמו השבוע' , '% גברים שנרשמו השבוע', '% נשים שנרשמו השבוע'],
             widthArr: [120, 80, 80, 80, 80, 80, 80]
         }
@@ -102,22 +103,46 @@ export default class Report2 extends Component {
     }
 
     Generate(){
-        this.state.tableData=this.state.tableData2;
+        //this.state.tableData=this.state.tableData2;
         this.state.tableData=[]
+
         // this.setState({tableData: rowData})
         for (let i = 0; i < this.state.destinationArr.length; i += 1) {
             let rowData = [];
+            let weekData= 0, maleWeek=0, femaleWeek=0; //must be done to refresh every row
             for (let j = 0; j < this.state.tableHead.length; j += 1) {
                 switch (j) {
                     case 0: //draw destination
                         rowData.push(this.state.destinationArr[i].name)
                         break;
                     case 1:  //reg this week - **TODO: must be fixed
-                        this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
+                        this.dbRef
+                            .where('regTime', '>', new Date( -7 * 24 * 60 * 60 * 1000))
                             .get()
-                            .then(querySnapshot => {
-                                rowData.push(querySnapshot.size)
-                            });
+                            .then(querySnapshot => {   //The solution to make a snapshot query for week
+                                querySnapshot.forEach(res => {
+                                    //console.log(' destination: ', res.data().destination, 'state dest: ', this.state.destinationArr[i].name)
+                                    if (res.data().Destination == this.state.destinationArr[i].name){
+                                        weekData++
+                                        if (res.data().Gender == 'זכר') {
+
+                                            maleWeek++
+                                        }
+                                        else if (res.data().Gender == 'נקבה')
+                                            femaleWeek++
+
+                                    }
+                                });
+                                //weekData = maleWeek+femaleWeek;
+                                rowData.push(weekData) // update the specific cell
+                                // rowData.push(maleWeek)  // maybe put these on same if
+                                // rowData.push(femaleWeek)
+                                // console.log('num of males:', maleWeek)
+                                // console.log('num of females:', femaleWeek)
+
+                            })
+
+
                         break;
                     case 2: //total reg
                         this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
@@ -126,15 +151,39 @@ export default class Report2 extends Component {
                                 rowData.push(querySnapshot.size)
                             });
                         break;
-                    case 3: //male this week - **TODO: must be fixed
+                    case 3: //male this week - **TODO: must be fixed -- not working this shit
+
+
+                        // this.dbRef
+                        // .where('regTime', '>', new Date( -7 * 24 * 60 * 60 * 1000))
+                        // .get()
+                        // .then(querySnapshot => {   //The solution to make a snapshot query for week
+                        //     querySnapshot.forEach(res => {
+                        //         //console.log(' destination: ', res.data().destination, 'state dest: ', this.state.destinationArr[i].name)
+                        //         if (res.data().Destination == this.state.destinationArr[i].name ){
+                        //             if (res.data().Gender === 'זכר')
+                        //                 maleWeek++;
+                        //
+                        //         }
+                        //     });
+                        //     console.log('num of male this week: ', maleWeek)
+                        //     rowData.push(maleWeek) // update the specific cell
+                        //
+                        // })
+                        //
+                        // console.log('num of male this week: ', maleWeek)
+                        // rowData.push(maleWeek)
+
                         this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
                             .where('Gender', '==', 'זכר')
+
                             .get()
                             .then(querySnapshot => {
                                 rowData.push(querySnapshot.size)
                             });
                         break;
                     case 4: //female this week - **TODO: must be fixed
+                        //rowData.push(femaleWeek)
                         this.dbRef.where('Destination', '==', this.state.destinationArr[i].name)
                             .where('Gender', '==', 'נקבה')
                             .get()
@@ -161,10 +210,10 @@ export default class Report2 extends Component {
             }
 
             this.state.tableData.push(rowData);
-            // this.setState({tableData: rowData})
 
         }
-        // this.setState({tableData: rowData})
+
+
     }
 
     render(){
@@ -173,17 +222,12 @@ export default class Report2 extends Component {
         return <View style={styles.container}>
             <View style={styles.headerTitle}>
 
-                <Text> דוח 1 </Text>
-                <Item floatingLabel>
-                    <Label>בחר משלחת</Label>
-                </Item>
+                <Text> דוח 1 - דו'ח כללי </Text>
+
 
                 {console.log('current delegation: ', this.state.delegation)}
-                <View>
-                    <Text>write here..</Text>
+                <View style={{marginTop: 15}}>
 
-                    {
-                    }
 
 
 
@@ -191,12 +235,25 @@ export default class Report2 extends Component {
                 <Button onPress={() => {
                     this.firestoreRef.onSnapshot(this.getDelegationName);
                     this.Generate();
+
                 }} title={"הנפק"}/>
+
+                <Text style={{marginTop: 2}} />
+                <Button
+
+                    onPress={() => {
+                        this.setState({ key: this.state.key + 1 });
+                    }}
+                    title={"הצג נתונים"}/>
+
+
 
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
-                <View>
+                <View
+                    key={this.state.key}
+                >
 
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                         <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header}
@@ -205,6 +262,8 @@ export default class Report2 extends Component {
                     <ScrollView style={styles.dataWrapper}>
                         <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                             {
+
+                                /// THIS MAYBE NEED TO BE INSIDE A STATE AFTER GENERATE FUNCTION IS DONE OR RERENDER
                                 this.state.tableData.map((rowData, index) => (
                                     <Row
                                         key={index}
@@ -214,7 +273,10 @@ export default class Report2 extends Component {
                                         textStyle={styles.text}
                                     />
                                 ))
+
                             }
+
+
                         </Table>
                     </ScrollView>
                 </View>

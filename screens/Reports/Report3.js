@@ -16,10 +16,10 @@ export default class Report3 extends Component {
             delegationName: [],
             destinationArr: [],
             delegation: '',
-            cityTable: [],
             tableData : [],
             tableData2:[],
-            tableHead: ['שם העיר', 'שמעתי מחבר', 'פייסבוק', 'כתבה בחדשות', 'שלט חוצות', 'הרצאה בקורס משתחררים', 'אחר'],
+            key: '',
+            tableHead: ['שם משלחת', 'שמעתי מחבר', 'פייסבוק', 'כתבה בחדשות', 'שלט חוצות', 'הרצאה בקורס משתחררים', 'אחר'],
             widthArr: [60, 80, 60, 60, 60, 60, 60]
         }
     }
@@ -49,33 +49,6 @@ export default class Report3 extends Component {
         });
     }
 
-
-
-
-    cityChecker(){
-        let i = 0;
-        const cityArr = [];
-        this.state.cityTable = [];
-        this.dbRef
-            .where('Destination', '==', this.state.delegation)
-            .get()
-            .then(querySnapshot=> {
-                querySnapshot.forEach(doc => {
-                    this.state.cityTable[i]=doc.data().Location;
-                    i++;
-                    cityArr.push({City: doc.data().Location})
-                    if(i==querySnapshot.size)
-                        this.fixCities()
-                });
-            })
-        // console.log('result is: ', this.state.cityTable)
-    }
-
-    fixCities() {
-        let unique = this.state.cityTable.filter((v, i, a) => a.indexOf(v) === i);
-        // console.log('unique : test: ', unique)
-        this.state.cityTable = unique;
-    }
 
     getDelegationName = (querySnapshot) =>{
         const delegationName= [];
@@ -115,16 +88,16 @@ export default class Report3 extends Component {
 
 
 
-        for (let i = 0; i < this.state.cityTable.length; i += 1) {
+        for (let i = 0; i < this.state.destinationArr.length; i += 1) {
             let rowData = [];
-            for (let j = 0; j < 7; j += 1) {
+            for (let j = 0; j < this.state.widthArr.length; j += 1) {
                 switch (j) {
                     case 0:
-                        rowData.push(this.state.cityTable[i])
+                        rowData.push(this.state.destinationArr[i].name)
                         break;
                     case 1:  //num of candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'שמעתי מחבר')
                             .get()
                             .then(querySnapshot => {
@@ -132,8 +105,8 @@ export default class Report3 extends Component {
                             });
                         break;
                     case 2: //num of male candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'פייסבוק')
                             .get()
                             .then(querySnapshot => {
@@ -141,8 +114,8 @@ export default class Report3 extends Component {
                             });
                         break;
                     case 3: //present of male candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'כתבה בחדשות')
                             .get()
                             .then(querySnapshot => {
@@ -151,8 +124,8 @@ export default class Report3 extends Component {
                         break;
                     case 4:
                         //num of female candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'שלט חוצות')
                             .get()
                             .then(querySnapshot => {
@@ -161,8 +134,8 @@ export default class Report3 extends Component {
                         break;
                     case 5:
                         //precent of female candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'הרצאה בקורס משתחררים')
                             .get()
                             .then(querySnapshot => {
@@ -171,8 +144,8 @@ export default class Report3 extends Component {
                         break;
                     case 6:
                         //precent of female candidate
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('Destination', '==', this.state.destinationArr[i].name)
                             .where('CameFrom', '==', 'אחר')
                             .get()
                             .then(querySnapshot => {
@@ -188,39 +161,19 @@ export default class Report3 extends Component {
     }
 
     render(){
-        this.cityChecker();
-        console.log(this.state)
+
+
         return <View style={styles.container}>
             <View style={styles.headerTitle}>
 
                 <Text> דוח 3</Text>
-                <Item floatingLabel>
-                    <Label>בחר משלחת</Label>
-                </Item>
-                <Item picker>
-                    <Picker
-                        mode="dropdown"
-                        style={{width: 20}}
-                        placeholder="choose destination"
-                        placeholderStyle={{color: "#bfc6ea"}}
-                        placeholderIconColor="#007aff"
-                        selectedValue={this.state.delegation}
-                        onValueChange={(value) => {this.setState({delegation: value})} }>
-                        <Picker.Item label="בחר" value=""/>
-                        {
-                            this.state.destinationArr.map((city, i) => {
 
-                                return <Picker.Item label={city.name} value={city.name} key={i}/>
-                            })
-                        }
-                    </Picker>
-                </Item>
-                {console.log('current delegation: ', this.state.delegation)}
+
                 <View>
                     <Text>write here..</Text>
 
-                    {
-                    }
+
+
 
 
 
@@ -230,10 +183,19 @@ export default class Report3 extends Component {
                     this.Generate();
                 }} title={"הנפק"}/>
 
+                <Text style={{marginTop: 2}} />
+                <Button
+
+                    onPress={() => {
+                        this.setState({ key: this.state.key + 1 });
+                    }}
+                    title={"הצג נתונים"}/>
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
-                <View>
+                <View
+                    key={this.state.key}
+                >
 
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                         <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header}

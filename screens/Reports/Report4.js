@@ -22,6 +22,7 @@ export default class Report4 extends Component {
             delegationName: [],
             destinationArr: [],
             currDelegation: '',
+            key: '',
             //genderArr: [],
             delegation: '',
             cityTable: [],
@@ -307,14 +308,22 @@ export default class Report4 extends Component {
                 <Button onPress={() => {
                     this.firestoreRef.onSnapshot(this.getDelegationName);
                     this.Generate();
-                    //this.forceUpdate();
-                    //this.updateState();
                 }} title={"הנפק"}/>
+
+                <Text style={{marginTop: 2}} />
+                <Button
+
+                    onPress={() => {
+                        this.setState({ key: this.state.key + 1 });
+                    }}
+                    title={"הצג נתונים"}/>
 
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
-                <View>
+                <View
+                    key={this.state.key}
+                >
 
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                         <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header}
