@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Button,Image, Platform, StyleSheet, Text, TouchableOpacity, View, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card, CardSection } from './common';
+// import { Card1, CardSection1 } from './common';
 import { withTheme } from 'react-native-elements';
 // import Video from 'react-native-video';
+import { Card1 } from './common/Card1';
+import { CardSection1 } from './common/CardSection1';
 
 
 
@@ -31,7 +33,7 @@ export default class HomeScreen extends Component {
 
         <ScrollView>
             <View>
-                <Card>
+                <Card1>
                     <View>
                         <ImageBackground source={require('./pics/introBackground.jpg')} style={styles.introBackground}>
 
@@ -39,26 +41,26 @@ export default class HomeScreen extends Component {
                         <View><Text> </Text></View>
                         
 
-                        <CardSection>
+                        <CardSection1>
                             <Text style={styles.textTitle}>לוחמים ללא גבולות</Text>
                             <Text style={styles.line}>__________________</Text>
                             <View><Text> </Text></View>
-                        </CardSection>
+                        </CardSection1>
 
                         <View style={styles.messageBox}>
-                            <CardSection >
+                            <CardSection1 >
                                 <Text style={styles.textMessage}>ניתן להירשם כעת גם למשלחות החדשות, כאן בישראל!!</Text>
-                            </CardSection>
+                            </CardSection1>
                         </View>
 
                         <View style={styles.signUp}>
-                            <CardSection>
+                            <CardSection1>
                                 <Button 
                                     onPress={() => this.props.navigation.navigate('RegistrationForm')}
                                     title="     להתנדבות     "
                                     color = "#31c5c7"
                                 /> 
-                            </CardSection>
+                            </CardSection1>
                         </View>
 
 
@@ -69,40 +71,40 @@ export default class HomeScreen extends Component {
 
                         </ImageBackground>
                     </View>
-                </Card>
+                </Card1>
 
-                <Card>
+                <Card1>
                     <View>
                         <ImageBackground source={require('./pics/israelFlag.jpg')} style={styles.introBackground}>
                             <View style={styles.aboutContainer}>
-                                <CardSection>
+                                <CardSection1>
                                     <Text></Text>
                                     <Text></Text>
                                     <Text style={styles.textWho}>מי אנחנו?</Text>
                                     <Text style={styles.line}>__________________</Text>
-                                </CardSection>
+                                </CardSection1>
 
-                                <CardSection>
+                                <CardSection1>
                                     <Text style={styles.textAbout1}>עמותת "לוחמים ללא גבולות" הינה עמותה ישראלית ציונית הפועלת למנף את התשתית העצומה של עשרות אלפי תרמילאים ישראלים בוגרי צבא המטיילים במדינות העולם השלישי לטובת התנדבות הומניטארית כחול לבן במדינות אלו כחלק מ"הטיול הגדול"</Text>
 
                                     <Text style = {styles.textAbout2}>העמותה הוקמה בשנת 2013 בידי שלושה קצינים בוגרי יחידת דובדבן אשר טיילו במזרח הרחוק ונחשפו לכמות הבלתי נתפסת של ישראלים המטיילים במדינות העולם השלישי במהלך "הטיול הגדול" (כמות הנאמדת בכ450,000 תרמילאים מדי עשור). המחשבה הייתה כי אם נשכיל למנף תשתית עצומה זו נוכל לעשות המון טוב וגם להציג את פניה היפות והאמיתיות של ישראל ובוגרי צה"ל בעולם.</Text>
-                                </CardSection>
+                                </CardSection1>
                             </View>    
                         </ImageBackground>
                     </View>
-                </Card>
+                </Card1>
 
-                <Card>
+                <Card1>
                     <View>
-                        <CardSection>
+                        <CardSection1>
                             <Button
                                 onPress={() => this.props.navigation.navigate('LoginForm')}
                                 title="כניסה למורשים"
                                 color = "#31c5c7"
                             />
-                        </CardSection>
+                        </CardSection1>
                     </View>
-                </Card>
+                </Card1>
             </View>
             
 
