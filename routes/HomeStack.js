@@ -2,6 +2,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from '../screens/HomeScreen';
 import RegistrationForm from '../screens/RegistrationForm';
 import LoginForm from '../screens/LoginForm';
+import OurVisionScreen from '../screens/OurVisionScreen';
 import React from 'react';
 
 const screens ={
@@ -19,6 +20,15 @@ const screens ={
         screen : RegistrationForm,
         navigationOptions:() =>({
             title:'הגשת מועמדות'
+        })
+    },
+    OurVisionScreen:{
+        screen: OurVisionScreen,
+        navigationOptions:() =>({
+        title:'עוד עלינו',
+        headerStyle: {
+        backgroundColor: '',
+      },
         })
     },
     LoginForm:{
