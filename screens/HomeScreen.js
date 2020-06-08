@@ -89,7 +89,16 @@ export default class HomeScreen extends Component {
 
                                     <Text style = {styles.textAbout2}>העמותה הוקמה בשנת 2013 בידי שלושה קצינים בוגרי יחידת דובדבן אשר טיילו במזרח הרחוק ונחשפו לכמות הבלתי נתפסת של ישראלים המטיילים במדינות העולם השלישי במהלך "הטיול הגדול" (כמות הנאמדת בכ450,000 תרמילאים מדי עשור). המחשבה הייתה כי אם נשכיל למנף תשתית עצומה זו נוכל לעשות המון טוב וגם להציג את פניה היפות והאמיתיות של ישראל ובוגרי צה"ל בעולם.</Text>
                                 </CardSection1>
-                            </View>    
+                            </View>
+                            <View style={styles.aboutUs}>
+                                <CardSection1>
+                                    <Button 
+                                        onPress={() => this.props.navigation.navigate('OurVisionScreen')}
+                                        title="         עוד עלינו         "
+                                        color = "#31c5c7"
+                                    /> 
+                                </CardSection1>
+                            </View>
                         </ImageBackground>
                     </View>
                 </Card1>
@@ -194,4 +203,10 @@ const styles = StyleSheet.create({
         fontSize: 23,
         textAlign: 'justify',
     },
+    aboutUs: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20,
+        },
 });
