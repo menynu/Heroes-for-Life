@@ -4,7 +4,8 @@ import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View
 import firebase from '../database/firebaseDb';
 import {Item, Picker} from "native-base";
 import cities from './cities/cities'
-
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import RNPicker from "rn-modal-picker";
 
 class RegistrationForm extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class RegistrationForm extends Component {
       lang_support: '',
       Status: '',
       CameFrom: '',
+      placeHolderText: 'בחר ישוב מגורים',
+      selectedText: '',
       isLoading: false,
       selectedDest: 'בחר משלחת',
       destinationArr: [],
@@ -174,6 +177,9 @@ class RegistrationForm extends Component {
 
   }
 
+  selectedValue(index, item) {
+    this.setState({selectedText: item.name, Location: item.name});
+  }
 
   onValueChangeG(value: string) {
     this.setState({
@@ -276,25 +282,34 @@ class RegistrationForm extends Component {
             />
           </View>
           <View style={styles.inputGroup}>
-            <Text>בחר אזור מגורים</Text>
-            <Item picker>
-              <Picker
-                  mode="dropdown"
-                  style={{ width: 20 }}
-                  placeholder="בחר עיר מגורים"
-                  placeholderStyle={{ color: "#bfc6ea" }}
-                  placeholderIconColor="#007aff"
-                  selectedValue={this.state.Location}
-                  onValueChange={ (value) => ( this.setState({Location: value}) ) } >
-                <Picker.Item label="בחר" value="" />
-                {
-                  this.state.cityArea = cities.map( (city, i) => {
 
-                    return <Picker.Item label={city.name} value={city.name} key={i} />
-                  })
-                }
-              </Picker>
-            </Item>
+
+
+            <View style={Styles.container}>
+              <Text>
+                {"בחר אזור מגורים"}
+              </Text>
+              <RNPicker
+                  dataSource={cities}
+                  dummyDataSource={this.state.dataSource}
+                  defaultValue={false}
+                  pickerTitle={"יישובים בארץ"}
+                  showSearchBar={true}
+                  disablePicker={false}
+                  changeAnimation={"none"}
+                  searchBarPlaceHolder={"חפש מהרשימה"}
+                  showPickerTitle={true}
+                  searchBarContainerStyle={this.props.searchBarContainerStyle}
+                  pickerStyle={Styles.pickerStyle}
+                  pickerItemTextStyle={Styles.listTextViewStyle}
+                  selectedLabel={this.state.selectedText}
+                  placeHolderLabel={this.state.placeHolderText}
+                  selectLabelTextStyle={Styles.selectLabelTextStyle}
+                  placeHolderTextStyle={Styles.placeHolderTextStyle}
+                  dropDownImageStyle={Styles.dropDownImageStyle}
+                  selectedValue={(index, item) => this.selectedValue(index, item)}
+              />
+            </View>
 
 
           </View>
@@ -387,3 +402,75 @@ const styles = StyleSheet.create({
 })
 
 export default RegistrationForm;
+const Styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+
+  searchBarContainerStyle: {
+    marginBottom: 10,
+    flexDirection: "row",
+    height: 40,
+    shadowOpacity: 1.0,
+    shadowRadius: 5,
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    backgroundColor: "rgba(255,255,255,1)",
+    shadowColor: "#d3d3d3",
+    borderRadius: 10,
+    elevation: 3,
+    marginLeft: 10,
+    marginRight: 10
+  },
+
+  selectLabelTextStyle: {
+    color: "#000",
+    textAlign: "left",
+    width: "99%",
+    padding: 10,
+    flexDirection: "row"
+  },
+  placeHolderTextStyle: {
+    color: "#D3D3D3",
+    padding: 10,
+    textAlign: "left",
+    width: "99%",
+    flexDirection: "row"
+  },
+  dropDownImageStyle: {
+    marginLeft: 10,
+    width: 10,
+    height: 10,
+    alignSelf: "center"
+  },
+  listTextViewStyle: {
+    color: "#000",
+    marginVertical: 10,
+    flex: 0.9,
+    marginLeft: 20,
+    marginHorizontal: 10,
+    textAlign: "left"
+  },
+  pickerStyle: {
+    marginLeft: 18,
+    elevation:3,
+    paddingRight: 25,
+    marginRight: 10,
+    marginBottom: 2,
+    shadowOpacity: 1.0,
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    borderWidth:1,
+    shadowRadius: 10,
+    backgroundColor: "rgba(255,255,255,1)",
+    shadowColor: "#d3d3d3",
+    borderRadius: 5,
+    flexDirection: "row"
+  }
+});
