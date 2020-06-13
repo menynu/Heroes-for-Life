@@ -119,15 +119,14 @@ export default class Report2 extends Component {
                         rowData.push(this.state.cityTable[i])
                         break;
                     case 1:  //num of candidate total
-                        this.dbRef.where('Destination', '==', this.state.delegation)
-                            .where('Location', '==', this.state.cityTable[i])
+                        this.dbRef
+                            .where('regTime', '>', weekAgo)
                             .get()
                             .then(querySnapshot => {
                                 querySnapshot.forEach(res => {
                                     if (res.data().Location == this.state.cityTable[i]) {
-                                        if (res.data().regTime > weekAgo )
+                                        if (res.data().Destination = this.state.delegation )
                                             weekData++
-
                                     }
                                 })
                                 rowData.push(weekData)

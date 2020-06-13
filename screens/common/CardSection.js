@@ -9,7 +9,7 @@ const styles = {
   containerStyle: {
     padding: 15,
     borderBottomWidth: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     justFlyContent: 'flex-start',
     borderColor: '#ddd',
     position: 'relative',

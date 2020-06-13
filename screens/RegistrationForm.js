@@ -4,7 +4,7 @@ import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View
 import firebase from '../database/firebaseDb';
 import {Item, Picker} from "native-base";
 import cities from './cities/cities'
-import SearchableDropdown from 'react-native-searchable-dropdown';
+// import SearchableDropdown from 'react-native-searchable-dropdown';
 import RNPicker from "rn-modal-picker";
 
 class RegistrationForm extends Component {

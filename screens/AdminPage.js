@@ -31,7 +31,6 @@ export default class AdminPage extends React.Component {
             destinationArr: [],
             currDocID: '',
         };
-        this.setDate = this.setDate.bind(this);
 
     }
     componentDidMount() {
@@ -78,9 +77,7 @@ export default class AdminPage extends React.Component {
         state[prop] = val;
         this.setState(state);
     }
-    setDate(newDate) {
-        this.setState({ expiration: newDate });
-    }
+
 
 
 
@@ -249,7 +246,7 @@ export default class AdminPage extends React.Component {
 
                     <Card>
                         <Form>
-                            <Text style={{fontSize:24}}> להוספת משלחת:</Text>
+                            <Text style={{fontSize:24}}> להוספת משלחת חדשה:</Text>
                             <Item floatingLabel>
                                 <Label>שם משלחת:</Label>
                                 <Input
@@ -259,24 +256,7 @@ export default class AdminPage extends React.Component {
 
                                 />
                             </Item>
-                            <Item >
-                                <Text>תאריך סגירת המשלחת:</Text>
-                                <DatePicker
-                                    defaultDate={new Date(2020, 8, 1)}
-                                    minimumDate={new Date(2020, 8, 1)}
-                                    maximumDate={new Date(2030, 12, 31)}
-                                    locale={"en"}
-                                    timeZoneOffsetInMinutes={undefined}
-                                    modalTransparent={false}
-                                    animationType={"fade"}
-                                    androidMode={"default"}
-                                    placeHolderText="Select date"
-                                    textStyle={{ color: "green" }}
-                                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                    onDateChange={this.setDate}
-                                    disabled={false}
-                                />
-                            </Item>
+
 
                             <Button iconLeft
                                     onPress={() => this.addDelegationName()}

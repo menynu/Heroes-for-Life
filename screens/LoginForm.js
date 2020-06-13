@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { TextInput, Button, Alert } from 'react-native';
+import {TextInput, Button, Alert, Text, Image} from 'react-native';
 import { Header } from 'react-native-elements';
-import { View } from 'native-base';
+import {Icon, View} from 'native-base';
 import { DotIndicator } from 'react-native-indicators';
 import firebase from '../database/firebaseDb';
 
@@ -107,12 +107,24 @@ class LoginForm extends Component {
 
     render() {
         return(
-            <View style= {{}}>
-                <Header
-                    leftComponent={{ icon: 'menu', color: '#fff' }}
-                    centerComponent={{ text: 'מערכת מורשים', style: { color: '#fff' } }}
-                    rightComponent={{ icon: 'home', color: '#fff' }}
-                />
+            <View style= {{backgroundColor: 'white'}}>
+                <View style={styles.headerTitle}>
+
+                    <Icon name='menu' style={{marginRight: 15, marginTop:15}}  onPress={() => this.props.navigation.openDrawer()}/>
+                    <Image source={require('./pics/hflCustom.png')} style={styles.HomeScreenLogo}
+                           style={{
+                               marginTop: 5,
+                               marginBottom: 5,
+                               marginLeft: 15,
+                               resizeMode: 'contain',
+                               flex: 1,
+                               justifyContent: 'center',
+                               alignItems: 'center',
+                               width: '100%',
+                               height: '100%',
+                           }}
+                    />
+                </View>
                 <View style={styles.inputView}>
                     <TextInput
                         style = {styles.textInputStyle}

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {Alert, Button, StyleSheet, TextInput, ScrollView, ActivityIndicator, View, Text} from 'react-native';
 
 import firebase from '../database/firebaseDb';
-import {DatePicker, Form, Item, Label, Picker} from "native-base";
+import { Form, Item, Label, Picker} from "native-base";
 import {Card, CardSection} from "./common";
+import DatePicker from 'react-native-datepicker'
 
 export default class Information extends Component {
 
@@ -19,7 +20,7 @@ export default class Information extends Component {
             lang_support: '',
 
 
-            meetDate:'', //new Date(),
+            meetDate: new Date(),
             //meetTime: '',
             //Status: '',
             isLoading: true
@@ -32,7 +33,7 @@ export default class Information extends Component {
         const dbRef = firebase.firestore().collection('delegation').doc(this.props.navigation.state.params.userKey)
         dbRef.get().then((res) => {
             if (res.exists) {
-                console.log("1");
+
                 const user = res.data();
                 this.setState({
                     key: res.id,
@@ -51,7 +52,7 @@ export default class Information extends Component {
 
                     isLoading: false
                 });
-                console.log("2");
+
             } else {
                 console.log("Document does not exist!");
             }
@@ -71,9 +72,6 @@ export default class Information extends Component {
         this.setState(state);
     }
 
-    setDate(newDate) {
-        this.setState({ meetDate: newDate });
-    }
 
     updateUser() {
         this.setState({
@@ -90,9 +88,6 @@ export default class Information extends Component {
         }).then((docRef) => {
             this.setState({
                 key: '',
-                // meetDate: '',
-                // meetTime: '',
-                // Status: '',
                 isLoading: false,
             });
             //this.props.navigation.navigate('UserScreen');
@@ -159,18 +154,30 @@ export default class Information extends Component {
 
                 <View style={styles.inputGroup}>
                     <Text>בחר תאריך לקביעת ראיון </Text>
+
                     <DatePicker
-                        minimumDate={new Date()}
-                        //locale={"en"}
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode={"default"}
-                        placeHolderText="Select date"
-                        textStyle={{ color: "blue" }}
-                        placeHolderTextStyle={{ color: "#d3d3d3" }}
-                        onDateChange={this.setDate}
-                        disabled={false}
+                        style={{ width: 200 }}
+                        date={this.state.meetDate} //initial date from state
+                        mode="date" //The enum of date, datetime and time
+                        placeholder="select date"
+                        format="DD/MM/YYYY"
+                        minDate= {new Date()}
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0,
+                            },
+                            dateInput: {
+                                marginLeft: 36,
+                            },
+                        }}
+                        onDateChange={date => {
+                            this.setState({ meetDate: date });
+                        }}
                     />
 
                 </View>

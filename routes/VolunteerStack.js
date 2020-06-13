@@ -15,7 +15,9 @@ const screens ={
         navigationOptions:() =>({
             title:'עידכון מידע על המועמד',
         })
-    }
+    },
+
+
 }
 
 const VolunteerStack = createStackNavigator(screens,{
