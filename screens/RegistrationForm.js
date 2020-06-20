@@ -4,7 +4,7 @@ import { Button,Text, StyleSheet, TextInput, ScrollView, ActivityIndicator, View
 import firebase from '../database/firebaseDb';
 import {Item, Picker} from "native-base";
 import cities from './cities/cities'
-// import SearchableDropdown from 'react-native-searchable-dropdown';
+import SearchableDropdown from 'react-native-searchable-dropdown';
 import RNPicker from "rn-modal-picker";
 
 class RegistrationForm extends Component {
@@ -30,6 +30,7 @@ class RegistrationForm extends Component {
       selectedText: '',
       isLoading: false,
       selectedDest: 'בחר משלחת',
+      mailExisted: false,
       destinationArr: [],
       cityArea: [],
     };
@@ -115,13 +116,58 @@ class RegistrationForm extends Component {
     this.setState(state);
   }
 
+  checkEmail(){
+    let checkedMail = false
+    //this.state.mailExisted = false
+    this.dbRef.where('Email', '==', this.state.Email)
+        .where('Destination', '==', this.state.Destination)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(res => {
+            if (res.data().Destination == this.state.Destination) {
+                console.log('data:' , res.data())
+                //console.log('query:' , querySnapshot.metadata)
+                // alert('קיים כבר רישום למשלחת זו עבור המייל שהזנת')
+                checkedMail = true
+              console.log('EXISTED MAIL!')
+              console.log('query size',querySnapshot.size)
+              this.state.mailExisted = true
+
+            }
+            else{
+              checkedMail = false
+            }
+          })
+          this.setState({mailExisted: checkedMail})
+         // if (querySnapshot.size == 1) {
+         //   console.log('query size:' , querySnapshot.size)
+         //   console.log('query:' , querySnapshot.metadata)
+         //   alert('קיים כבר רישום למשלחת זו עבור המייל שהזנת')
+         //   checkedMail = true
+         // }
+        });
+        // this.setState({mailExisted: checkedMail})
+        // this.state.mailExisted = checkedMail;
+
+  }
+
+
   storeDelegation() {
 
-
+    this.checkEmail()
     if(this.state.Name === '' || this.state.Email == '' || this.state.Gender == '' || this.state.Age == '' || this.state.Location == '' || this.state.Mobile == '') {
       alert('אנא מלא את כל הפרטים')
 
+    }
+    else if(
+        this.dbRef.where('Email', '==', this.state.Email)
+            .where('Destination', '==', this.state.Destination)
+            .get()
+            .then(querySnapshot => {querySnapshot.size>0})
 
+    ){
+      alert('קיים כבר רישום למשלחת זו עבור המייל שהזנת')
+      console.log('mail already existed with that delegation')
     }
 
     //else if (this.dbRef.onSnapshot(this.emailValidation)){console.log('before email valid')}
@@ -145,6 +191,7 @@ class RegistrationForm extends Component {
         meetDate: '',
         meetTime: '',
         Status: '',
+        info: '', // will be used for update info status by volunteer
         CameFrom:this.state.CameFrom,
         regTime: new Date(),
       }).then((res) => {
@@ -177,7 +224,7 @@ class RegistrationForm extends Component {
 
   }
 
-  selectedValue(index, item) {
+  _selectedValue(index, item) {
     this.setState({selectedText: item.name, Location: item.name});
   }
 
@@ -291,7 +338,7 @@ class RegistrationForm extends Component {
               </Text>
               <RNPicker
                   dataSource={cities}
-                  dummyDataSource={this.state.dataSource}
+                  dummyDataSource={cities}
                   defaultValue={false}
                   pickerTitle={"יישובים בארץ"}
                   showSearchBar={true}
@@ -307,7 +354,7 @@ class RegistrationForm extends Component {
                   selectLabelTextStyle={Styles.selectLabelTextStyle}
                   placeHolderTextStyle={Styles.placeHolderTextStyle}
                   dropDownImageStyle={Styles.dropDownImageStyle}
-                  selectedValue={(index, item) => this.selectedValue(index, item)}
+                  selectedValue={(index, item) => this._selectedValue(index, item)}
               />
             </View>
 

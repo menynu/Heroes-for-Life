@@ -2,7 +2,7 @@
 [
     {
         "semel_yeshuv": "סמל_ישוב",
-        "name": "שם_ישוב",
+        "name": "test",
         "english_name": "שם_ישוב_לועזי",
         "semel_napa": "סמל_נפה",
         "shem_napa": "שם_נפה",
@@ -11,17 +11,7 @@
         "semel_moatza_ezorit": "סמל_מועצה_איזורית",
         "shem_moaatza": "שם_מועצה"
     },
-    {
-        "semel_yeshuv": "967",
-        "name": "אבו ג'ווייעד )שבט(",
-        "english_name": "ABU JUWEI'ID",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
+
     {
         "semel_yeshuv": "472",
         "name": "אבו גוש",
@@ -43,105 +33,6 @@
         "lishka": "עכו",
         "semel_moatza_ezorit": "0",
         "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "935",
-        "name": "אבו סריחאן )שבט(",
-        "english_name": "ABU SUREIHAN",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "958",
-        "name": "אבו עבדון )שבט(",
-        "english_name": "ABU  ABDUN",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "1042",
-        "name": "אבו עמאר )שבט(",
-        "english_name": "ABU  AMMAR",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "932",
-        "name": "אבו עמרה )שבט(",
-        "english_name": "ABU  AMRE",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "968",
-        "name": "אבו קורינאת )שבט(",
-        "english_name": "ABU QUREINAT",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "1342",
-        "name": "אבו קרינאת )יישוב(",
-        "english_name": "ABU QUREINAT",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "68",
-        "shem_moaatza": "נווה מדבר"
-    },
-    {
-        "semel_yeshuv": "966",
-        "name": "אבו רובייעה )שבט(",
-        "english_name": "ABU RUBEI'A",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "961",
-        "name": "אבו רוקייק )שבט(",
-        "english_name": "ABU RUQAYYEQ",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "0",
-        "shem_moaatza": ""
-    },
-    {
-        "semel_yeshuv": "1375",
-        "name": "אבו תלול",
-        "english_name": "ABU TULUL",
-        "semel_napa": "62",
-        "shem_napa": "באר שבע",
-        "semel_lishkat_mana": "62",
-        "lishka": "באר שבע",
-        "semel_moatza_ezorit": "68",
-        "shem_moaatza": "נווה מדבר"
     },
     {
         "semel_yeshuv": "652",

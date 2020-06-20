@@ -1,11 +1,8 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, SafeAreaView, Switch} from 'react-native';
-import { CheckBox } from 'react-native-elements'
-import {Container, DatePicker, Content, Button, Icon, Form, Text, Item, Input, Label, Picker} from 'native-base';
+import {StyleSheet, View, ScrollView, SafeAreaView, Alert} from 'react-native';
+import { Button, Icon, Form, Text, Item, Input, Label, Picker} from 'native-base';
 import firebase from "../database/firebaseDb";
 import {Card} from "./common";
-import {isTSTypeQuery} from "@babel/types";
-// import {addUser,addDelegation} from'../src/api/UsersApi'
 
 
 export default class AdminPage extends React.Component {
@@ -24,10 +21,14 @@ export default class AdminPage extends React.Component {
             permission: '',
             delegation: '',
             name: '',
-            expiration:  new Date(),
+            //expiration:  new Date(),
+            currUser: '',
             time: '',
             isActive: true,
             isLoading: false,
+            userArr: [],
+            userID: '',
+           // userRef: '',
             destinationArr: [],
             currDocID: '',
         };
@@ -35,6 +36,7 @@ export default class AdminPage extends React.Component {
     }
     componentDidMount() {
         this.unsubscribe = this.dbListRef.onSnapshot(this.getDelegationList);
+        this.unsubscribe = this.dbRef.onSnapshot(this.getUserList);
     }
 
 
@@ -45,19 +47,33 @@ export default class AdminPage extends React.Component {
     getDelegationList = (querySnapshot) =>{
         const destinationArr = [];
         querySnapshot.forEach((res) => {
-            const {name, expiration } = res.data();
+            const {name} = res.data();
             if (res.data().isActive) // remove this to get all delegations in DB
             destinationArr.push({
                 key: res.id,
                 res,
                 name,
-                expiration,
             });
         });
         this.setState({
             destinationArr,
             // isLoading: false,
         });
+    }
+
+    getUserList = (querySnapshot) => {
+        const userArr = [];
+        querySnapshot.forEach((res) =>{
+            const {name, email, delegation} = res.data();
+            if (res.data().permission == 'V')
+                userArr.push({
+                    key: res.id,
+                    email,
+                    name,
+                    delegation,
+                });
+            this.setState({userArr})
+        })
     }
 
     onValueChangeC(value: string) {
@@ -80,8 +96,6 @@ export default class AdminPage extends React.Component {
 
 
 
-
-
     addDelegationName() {
         if(this.state.name === '' ){
             alert('אנא מלא את כל הפרטים')
@@ -91,12 +105,10 @@ export default class AdminPage extends React.Component {
             });
             this.dbListRef.add({
                 name: this.state.name,
-                //expiration: this.state.expiration,
                 isActive: this.state.isActive,
             }).then((res) => {
                 this.setState({
                     name: '',
-                    //expiration: '' ,
                     isActive: 'true',
                     isLoading: false
 
@@ -113,23 +125,7 @@ export default class AdminPage extends React.Component {
         }
     }
 
-    editDelegation(){
-        this.dbListRef.where('name', '==', this.state.delegation)
-            .get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                    documentSnapshot.data().isActive='false';
-                    this.state.currDocID = documentSnapshot.id;
-                    console.log('after close ID: ', documentSnapshot.id, documentSnapshot.data());
-                })
-            });
-        // this.setDelegation()
-        //this.dbListRef.doc(this.state.currDocID).update({'isActive': false});
-    }
-    // setDelegation(){
-    //     this.dbListRef.doc(this.state.currDocID).update({'isActive': false});
-    // }
+
 
     addVolunteer() {
         if(this.state.email === '' ){
@@ -292,42 +288,23 @@ export default class AdminPage extends React.Component {
                                     }
                                 </Picker>
 
-                                {/*<CheckBox*/}
-                                {/*    center*/}
-                                {/*    title='לחץ לסגירת משלחת'*/}
-                                {/*    iconRight*/}
-                                {/*    iconType='material'*/}
-                                {/*    checkedIcon='clear'*/}
-                                {/*    uncheckedIcon='add'*/}
-                                {/*    checkedColor='red'*/}
-                                {/*    checked={this.state.checked}*/}
-                                {/*/>*/}
                             </Item>
-                            {/*<Switch*/}
-                            {/*  //  onValueChange = {props.toggleSwitch1}*/}
-                            {/*  //  value = {props.switch1Value}*/}
-                            {/*/>*/}
 
-
-                            {/*<Button iconLeft on press={() => this.editDelegation()} >*/}
                             <Button iconLeft
                                     onPress={() => this.dbListRef.where('name', '==', this.state.delegation)
                                         .get()
                                         .then(querySnapshot => {
                                             querySnapshot.forEach(documentSnapshot => {
                                                 console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                                                //documentSnapshot.data().isActive='false';
-                                                //documentSnapshot.data().update({'isActive': false})
                                                 this.state.currDocID = documentSnapshot.id;
                                                 console.log('after close ID: ', documentSnapshot.id, documentSnapshot.data());
                                             })
                                             this.dbListRef.doc(this.state.currDocID).update({isActive: false})
                                             console.log('updated!', this.state.currDocID);
                                         })
-                                        //this.dbListRef.doc(this.state.currDocID).update(isActive: false))
 
                                     }
-                                      //  .update('isActive' : false)}
+
                             >
                                 <Icon name='paper' />
                                 <Text>סגור משלחת</Text>
@@ -335,6 +312,114 @@ export default class AdminPage extends React.Component {
                         </Form>
 
                     </Card>
+
+
+
+                    <Card>
+                        <Form>
+                            <Text style={{fontSize:24}}> לעדכון מלגאי למשלחת:</Text>
+                            <Item>
+                                <Text>בחר מלגאי</Text>
+                            </Item>
+                            <Item picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: 20 }}
+                                    placeholder="choose destination"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.currUser}
+                                    onValueChange={ (value) => ( this.setState({currUser: value}) ) } >
+                                    <Picker.Item label="בחר" value="" />
+                                    {
+                                        this.state.userArr.map( (user, i) => {
+
+                                            return <Picker.Item label={user.email} value={user.email} key={i} />
+                                        })
+                                    }
+                                </Picker>
+                            </Item>
+                            <Item>
+                                <Label>בחר משלחת</Label>
+                            </Item>
+                            <Item picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: 20 }}
+                                    placeholder="choose destination"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.delegation}
+                                    onValueChange={ (value) => ( this.setState({delegation: value}) ) } >
+                                    <Picker.Item label="בחר" value="" />
+                                    {
+                                        this.state.destinationArr.map( (city, i) => {
+
+                                            return <Picker.Item label={city.name} value={city.name} key={i} />
+                                        })
+                                    }
+                                </Picker>
+
+                            </Item>
+
+                            <Button iconLeft
+                                    onPress={() => this.dbRef.where('email', '==', this.state.currUser)
+                                        .get()
+                                        .then(querySnapshot => {
+
+                                            querySnapshot.forEach(documentSnapshot => {
+                                                console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                                                this.state.userID =  documentSnapshot.id;
+                                                console.log('after close ID: ', this.state.userID)//, documentSnapshot.data());
+                                            })
+                                            this.dbRef.doc(this.state.userID).update({delegation: this.state.delegation})
+                                        })
+                                    }
+                            >
+                                <Icon name='paper' />
+                                <Text>עדכן מלגאי</Text>
+                            </Button>
+                            <Button iconLeft
+                                    onPress={() =>
+                                    {
+                                        Alert.alert(
+                                            'מחק משתמש',
+                                            'האם אתה בטוח במחיקה?',
+                                            [
+                                                {text: 'כן', onPress: () => {
+                                                        this.dbRef.where('email', '==', this.state.currUser)
+                                                            .get()
+                                                            .then(querySnapshot => {
+
+                                                                querySnapshot.forEach(documentSnapshot => {
+                                                                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                                                                    this.state.userID =  documentSnapshot.id;
+                                                                    console.log('after close ID: ', this.state.userID)
+                                                                })
+                                                                this.dbRef.doc(this.state.userID).delete()
+                                                            })
+                                                    }
+                                                },
+                                                {text: 'לא', onPress: () => console.log('No item was removed'), style: 'cancel'},
+                                            ],
+                                            {
+                                                cancelable: true
+                                            }
+                                        );
+                                    }
+                                    }
+
+                            >
+                                <Icon name='paper' />
+                                <Text>מחק מלגאי</Text>
+                            </Button>
+
+                        </Form>
+
+                    </Card>
+
+
+
 
                     <Card>
                         <Text style={{fontSize:24}}>הנפקת דוחות</Text>

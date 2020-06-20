@@ -154,7 +154,12 @@ class LoginForm extends Component {
 
                 <View>{this.renderButton()}</View>
 
-
+            <View style={{backgroundColor:'white'}}>
+            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
+            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
+            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
+            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
+            </View>
 
             </View>
         )
