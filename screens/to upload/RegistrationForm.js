@@ -233,7 +233,7 @@ class RegistrationForm extends Component {
 
   validate = (text) => {
     console.log(text);
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
       console.log("Email is Not Correct");
       this.setState({ Email: text })

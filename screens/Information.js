@@ -19,7 +19,7 @@ export default class Information extends Component {
             about_me: '',
             lang_support: '',
             Destination: '',
-
+            Remarks: '', //הערות
 
             meetDate: new Date(),
             //meetTime: '',
@@ -86,6 +86,7 @@ export default class Information extends Component {
             meetDate: this.state.meetDate,
             meetTime: this.state.meetTime,
             Status: this.state.Status,
+            Remarks: this.state.Remarks,
 
         }).then((docRef) => {
             this.setState({
@@ -133,152 +134,181 @@ export default class Information extends Component {
             )
         }
         return (
-            <ScrollView style={styles.container}>
-                <Text></Text>
-                <Text></Text>
-                <Card>
-                    <ImageBackground source={require('./pics/user_profile4.jpg')} style={styles.introBackground}>
+            <ImageBackground source={require('./pics/background.jpeg')} style={styles.containerImage}>
+                <ScrollView style={styles.container}>
+                    <Text></Text>
+                    <Text></Text>
+                    <Card>
+                        <ImageBackground source={require('./pics/user_profile4.jpg')} style={styles.introBackground}>
 
-                        <Text style={styles.TextName}> שם: {this.state.Name}  </Text>
+                            <Text style={styles.TextName}> שם: {this.state.Name}  </Text>
 
-                    <CardSection>
-                <View>
-                        <Text style={styles.Text}> טלפון: {this.state.Mobile} </Text>
-                        <Text style={styles.Text}> אימייל: {this.state.Email}  </Text>
-                        <Text style={styles.Text}> כתובת מגורים: {this.state.Location}  </Text>
-                        <Text style={styles.Text}> יעד משלחת: {this.state.Destination}  </Text>
-                        <Text style={styles.Text}>  שפות: {this.state.lang_support}  </Text>
-                        <Text style={styles.Text}> על עצמי: {this.state.about_me}   </Text>
+                            <CardSection>
+                                <View>
+                                    <Text style={styles.Text}> טלפון: {this.state.Mobile} </Text>
+                                    <Text style={styles.Text}> אימייל: {this.state.Email}  </Text>
+                                    <Text style={styles.Text}> כתובת מגורים: {this.state.Location}  </Text>
+                                    <Text style={styles.Text}> יעד משלחת: {this.state.Destination}  </Text>
+                                    <Text style={styles.Text}>  שפות: {this.state.lang_support}  </Text>
+                                    <Text style={styles.Text}> על עצמי: {this.state.about_me}   </Text>
+                                    <Text></Text>
+                                </View>
+                            </CardSection>
+                            <CardSection>
+                                <Text style={styles.Text}> תאריך ראיון: {this.state.meetDate}  </Text>
+                                <Text style={styles.Text}> שעת ראיון: {this.state.meetTime} </Text>
+                                <Text style={styles.Text}> סטאטוס: {this.state.Status} </Text>
+                                <Text style={styles.Text}> הערות: {this.state.Remarks} </Text>
+
+                            </CardSection>
+                        </ImageBackground>
+                    </Card>
+
+                    <Text> </Text>
+                    <Text style={styles.line}>___________</Text>
+                    <Text> </Text>
+                    <Card>
+
+                    <View style={styles.InterviewDetails}>
+                        <Text style={styles.Title}>פרטי הראיון</Text>
+                        <Text style={styles.line}>_____</Text>
                         <Text></Text>
-                </View>
-                    </CardSection>
-                    <CardSection>
-                        <Text style={styles.Text}> תאריך ראיון: {this.state.meetDate}  </Text>
-                        <Text style={styles.Text}> שעת ראיון: {this.state.meetTime} </Text>
-                        <Text style={styles.Text}> סטאטוס: {this.state.Status} </Text>
-                    </CardSection>
-                    </ImageBackground>
-                </Card>
-
-                <Text> </Text>
-                <Text style={styles.line}>___________________________________________________________________________________</Text>
-                <Text> </Text>
-            
-                <View style={styles.InterviewDetails}>
-                    <Text style={styles.Title}>פרטי הראיון</Text>
-                    <Text style={styles.line}>___________________________________</Text>
-                    <Text></Text>
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.TextBig}>בחר תאריך לקביעת ראיון </Text>
-                        <Text> </Text>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.TextBig}>בחר תאריך לקביעת ראיון </Text>
+                            <Text> </Text>
 
 
-                        <DatePicker
-                            style={{ width: 200 }}
-                            date={this.state.meetDate} //initial date from state
-                            mode="date" //The enum of date, datetime and time
-                            placeholder="select date"
-                            format="DD/MM/YYYY"
-                            minDate= {new Date()}
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 8,
-                                    marginLeft: 0,
-                                    width: 50,
-                                    height: 50,
-                                },
-                                dateInput: {
-                                    marginLeft: 50,
-                                    marginTop: 30,
-                                    backgroundColor: '#f7f7f7',
-                                    borderColor: '#f7f7f7'
-                                },
-                            }}
-                            onDateChange={date => {
-                                this.setState({ meetDate: date });
-                            }}
-                        />
+                            <DatePicker
+                                style={{ width: 200 }}
+                                date={this.state.meetDate} //initial date from state
+                                mode="date" //The enum of date, datetime and time
+                                placeholder="select date"
+                                format="DD/MM/YYYY"
+                                minDate= {new Date()}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 8,
+                                        marginLeft: 0,
+                                        width: 50,
+                                        height: 50,
+                                    },
+                                    dateInput: {
+                                        marginLeft: 50,
+                                        marginTop: 30,
+                                        backgroundColor: '#f7f7f7',
+                                        borderColor: '#f7f7f7'
+                                    },
+                                }}
+                                onDateChange={date => {
+                                    this.setState({ meetDate: date });
+                                }}
+                            />
+                            <Text></Text>
+                            <Text style={styles.line}>___________</Text>
+
+                        </View>
+                        <View style={styles.inputGroup}>
+
+                            <Text style={styles.TextBig}> בחר שעה רצויה: </Text>
+                            <Text></Text>
+                            <TextInput
+                                backgroundColor={'#f7f7f7'}
+                                multiline={true}
+                                numberOfLines={1}
+                                fontSize={20}
+                                placeholder={'Set Meeting Time:'}
+                                value={this.state.meetTime}
+                                onChangeText={(val) => this.inputValueUpdate(val, 'meetTime')}
+                            />
+                            <Text style={styles.line}>___________</Text>
+
+                        </View>
+
+                        <View>
+                            <Label style={styles.TextBig}>עדכן סטטוס</Label>
+                        </View>
                         <Text></Text>
-                        <Text style={styles.line}>___________________________________________________________________________________</Text>
+                        <View style={{backgroundColor: '#f7f7f7'}}>
+                            <Item picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: 20 }}
+                                    placeholder="סטטוס של המועמד"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.Status}
+                                    onValueChange={this.onValueChangeC.bind(this)}
 
-                    </View>
-                    <View style={styles.inputGroup}>
+                                >
+                                    <Picker.Item label="בחר סטטוס" value="" />
 
-                        <Text style={styles.TextBig}> בחר שעה רצויה: </Text>
+                                    <Picker.Item label="6.לא עודכן" value="6.לא עודכן" />
+                                    <Picker.Item label="5.לא ענה (1)" value="5.לא ענה (1)" />
+                                    <Picker.Item label="4.לא ענה (2)" value="4.לא ענה (2)" />
+                                    <Picker.Item label="3.לא ענה (3)" value="3.לא ענה (3)" />
+                                    <Picker.Item label="1.לא רלוונטי" value="1.לא רלוונטי" />
+                                    <Picker.Item label="2.ענה ומגיע" value="2.ענה ומגיע" />
+
+                                </Picker>
+                            </Item>
+                        </View>
+
+                        <View style={styles.inputGroup}>
+
+                            <Text style={styles.TextBig}> הערות נוספות: </Text>
+                            <Text></Text>
+                            <TextInput
+                                backgroundColor={'#f7f7f7'}
+                                multiline={true}
+                                numberOfLines={1}
+                                fontSize={20}
+                                placeholder={'כתוב כאן הערות'}
+                                value={this.state.Remarks}
+                                onChangeText={(val) => this.inputValueUpdate(val, 'Remarks')}
+                            />
+                            <Text style={styles.line}>___________</Text>
+
+                        </View>
+
+
                         <Text></Text>
-                        <TextInput
-                        backgroundColor={'#f7f7f7'}
-                            multiline={true}
-                            numberOfLines={1}
-                            fontSize={20}
-                            placeholder={'Set Meeting Time:'}
-                            value={this.state.meetTime}
-                            onChangeText={(val) => this.inputValueUpdate(val, 'meetTime')}
-                        />
-        <Text style={styles.line}>___________________________________________________________________________________</Text>
 
+
+                        <View style={styles.button}>
+                            <Button
+                                title='עדכן פרטי משתמש'
+                                onPress={() => {this.updateUser(),alert('עדכון התבצע בהצלחה') ,this.props.navigation.navigate('Volunteer')}}
+                                color="#31c5c7"
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                title='Delete'
+                                onPress={this.openTwoButtonAlert}
+                                color="#ff292c"
+                            />
+                        </View>
+                        <Text></Text>
                     </View>
-
-                    <View>
-                        <Label style={styles.TextBig}>עדכן סטטוס</Label>
-                    </View>
-                    <Text></Text>
-                    <View style={{backgroundColor: '#f7f7f7'}}>
-                    <Item picker>
-                        <Picker
-                            mode="dropdown"
-                            style={{ width: 20 }}
-                            placeholder="סטטוס של המועמד"
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={this.state.Status}
-                            onValueChange={this.onValueChangeC.bind(this)}
-
-                        >
-                            <Picker.Item label="בחר סטטוס" value="" />
-                            <Picker.Item label="לא ענה (1)" value="לא ענה (1)" />
-                            <Picker.Item label="לא ענה (2)" value="לא ענה (2)" />
-                            <Picker.Item label="לא ענה (3)" value="לא ענה (3)" />
-                            <Picker.Item label="לא רלוונטי" value="לא רלוונטי" />
-                            <Picker.Item label="ענה ומגיע" value="ענה ומגיע" />
-
-                        </Picker>
-                    </Item>
-                    </View>
-                    <Text></Text>
-
-
-                    <View style={styles.button}>
-                        <Button
-                            title='עדכן פרטי משתמש'
-                            onPress={() => {this.updateUser(),alert('עדכון התבצע בהצלחה') ,this.props.navigation.navigate('Volunteer')}}
-                            color="#31c5c7"
-                        />
-                    </View>
-                    <View>
-                        <Button
-                            title='Delete'
-                            onPress={this.openTwoButtonAlert}
-                            color="#ff292c"
-                        />
-                    </View>
-                    <Text></Text>
-                </View>
-            </ScrollView>
+</Card>
+                </ScrollView>
+            </ImageBackground>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    containerImage:{
+        flex:1,
+        justifyContent:'center'
+    },
     container: {
         flex: 1,
-        // padding: 35,
         paddingHorizontal: 15,
-        backgroundColor: 'white',
 
     },
     TextName: {

@@ -2,15 +2,14 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
 
 import HomeStack from './HomeStack';
-import AdminStack from './AdminStack';
+import TabNavigator from './TabNavigator';
 import VolunteerStack from './VolunteerStack';
-
-import  LoginForm from '../screens/LoginForm';
-import  RegistrationForm from '../screens/RegistrationForm';
-
+import LoginForm from "../screens/LoginForm";
+import RegistrationForm from "../screens/RegistrationForm";
+import MangeU from "../screens/MangeU";
+import MangeD from "../screens/MangeD";
 
 const RootDrawerNavigator = createDrawerNavigator({
-
     HomeScreen:{
         screen:HomeStack,
         navigationOptions:() =>({
@@ -18,14 +17,14 @@ const RootDrawerNavigator = createDrawerNavigator({
             headerTitleStyle: {
                 fontWeight: 'bold',
                 fontSize: 20,
-                color: 'red',
             },
         })
     },
     LoginForm:{
         screen:LoginForm,
         navigationOptions:() =>({
-            title:'מערכת מורשים'
+            title:'מערכת מורשים',
+            alignItems:'right',
         })
     },
     RegistrationForm:{
@@ -38,16 +37,40 @@ const RootDrawerNavigator = createDrawerNavigator({
         screen:VolunteerStack,
         navigationOptions:() =>({
             drawerLabel: () => null
-        })
+        }),
+
+
     },
     AdminScreen:{
-        screen:AdminStack,
+        screen:TabNavigator,
         navigationOptions:() =>({
             drawerLabel: () => null
         })
 
-    }
+    },
+    MangeU:{
+    screen:MangeU,
+        navigationOptions:() =>({
+        drawerLabel: () => null,
 
+    })
+
+    },
+    MangeD:{
+    screen:MangeD,
+        navigationOptions:() =>({
+        drawerLabel: () => null
+    })
+
+}
+
+
+},{
+    drawerPosition:"right",
+    drawerType:"slide",
+        contentOptions:{
+
+    }
 })
 
 export default createAppContainer(RootDrawerNavigator);

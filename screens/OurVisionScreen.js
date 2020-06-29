@@ -3,31 +3,28 @@ import { Button,Image, Platform, StyleSheet, Text, TouchableOpacity, View, Image
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Card, CardSection } from './common';
 import { withTheme } from 'react-native-elements';
+import { Icon } from 'native-base';
 import { Card1 } from './common/Card1';
 import { CardSection1 } from './common/CardSection1';
 
 
 export default class OurVisionScreen extends Component {
-    
+
     render(){
         return (
-
-        <View style= {{flex: 1, backgroundColor: "white"}}>
-            <View style={styles.headerTitle}>
-                <Image source={require('./pics/hflCustom.png')} style={styles.HomeScreenLogo} />
-            </View> 
-
-        <ScrollView>
+            <ImageBackground source={require('./pics/background.jpeg')} style={styles.container}>
+        <View style= {{flex: 1}}>
+        <ScrollView style={{marginTop:5}}>
             <View>
                 <Card1>
                     <View style = {styles.Top}>
                         <CardSection1>
                             <View>
-                                <Text></Text>
+
                                 <Text style={styles.textTitle}>החזון שלנו</Text>
-                                <Text></Text>
+
                                 <Text style={styles.line}>__________________________________________________________________________________</Text>
-                                <Text></Text>
+
                                 <View style={styles.aboutContainer1}>
                                     <Text style={styles.textAbout2}>אנו מאמינים כי מדינת ישראל צריכה להיות לא רק מעצמת הייטק, מדע וחקלאות אלא גם ובעיקר מעצמה של חסד והתנדבות.</Text>
                                 </View>
@@ -36,13 +33,7 @@ export default class OurVisionScreen extends Component {
                                 </View>
                             </View>
                         </CardSection1>
-
-                        <Text> </Text>
-                        <Text> </Text>
                         <Text style={styles.line}>__________________________</Text>
-                        <Text> </Text>
-                        <Text> </Text>
-                        <Text> </Text>
 
                     </View>
 
@@ -51,54 +42,49 @@ export default class OurVisionScreen extends Component {
                     <CardSection1>
                         <Text> </Text>
                         <Text style={styles.textTitle2}>מטרות הארגון</Text>
-                        <Text> </Text>
                         <Text style={styles.line}>________________________________________________________________________</Text>
                     </CardSection1>
 
                     <CardSection1>
                         <Text style={styles.textTitleBottom}>סיוע לאוכלוסיות הזקוקות לכך מבית ומחוץ</Text>
-                        <Text> </Text>
                         <Text style={styles.textBodyBottom}>אנו מאמינים כי לפעילות העמותה יכולת להוות מחולל שינוי אמיתי לאוכלוסיות מוחלשות הן בארץ והן בעולם וזאת מבלי להמציא שום דבר מחדש פשוט לנצל תשתית אדירה שקיימת כבר וניצולה למעשים טובים.</Text>
                     </CardSection1>
 
-                    <Text> </Text>
                     <Text style={styles.line}>__________________________</Text>
-                    <Text> </Text>
 
                     <CardSection1>
                         <Text style={styles.textTitleBottom}>שיפור התדמית של צה''ל והמדינה בעולם</Text>
-                        <Text> </Text>
+
                         <Text style={styles.textBodyBottom}>פעילות החוץ הינה בעלת פוטנציאל הסברתי עצום וכאמור אחת ממטרותיה היא לתמוך את מאמץ ההסברה של צה"ל ומדינת ישראל ולהביא לחיזוק אמון הקהילה הבינלאומית בצה"ל ובמדינה באמצעות סיקור תקשורתי והפצת תמונות אנושיות מהמשלחת.</Text>
                     </CardSection1>
-
-                    <Text> </Text>
                     <Text style={styles.line}>__________________________</Text>
-                    <Text> </Text>
-
                     <CardSection1>
                         <Text style={styles.textTitleBottom}>מתן ערך מוסף משמעותי לטיול הגדול</Text>
-                        <Text> </Text>
+
                         <Text style={styles.textBodyBottom}>טיול הגדול אחרי צבא הינו התחנה האחרונה של המשוחררים הטריים קודם היותם אזרחים במדינה .שילוב ערכים והתנדבות דווקא בתחנה זו מהווה חיזוק משמעותי בדרכנו להיות חברה ערכית וטובה יותר.</Text>
                     </CardSection1>
 
                     <Text style={styles.line}>__________________________</Text>
-                    <Text> </Text>
-                    <Text> </Text>
 
                 </View>
                 </Card1>
-                
+
             </View>
-            
-            
+
+
 
         </ScrollView>
         </View>
-
+            </ImageBackground>
         );
     }
 }
 const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
     Top: {
         backgroundColor: '#31c5c7',
         alignItems: 'center',
@@ -108,7 +94,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 25,
         marginRight: 25,
-        
+
     },
     HomeScreenLogo: {
         resizeMode: "contain",

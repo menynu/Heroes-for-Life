@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, ScrollView, Text, Image, TouchableHighlight, Button, ImageBackground} from 'react-native';
+import {StyleSheet, View, ScrollView, Text, Image, TouchableHighlight, Button} from 'react-native';
 import { Table, Row } from 'react-native-table-component';
 import { Item, Label, Picker} from "native-base";
 import firebase from '../../database/firebaseDb';
@@ -76,6 +76,7 @@ export default class Report2 extends Component {
         let unique = this.state.cityTable.filter((v, i, a) => a.indexOf(v) === i);
          console.log('unique : test: ', unique)
         this.state.cityTable = unique;
+        //this.setState({cityTable: unique})
     }
 
     getDelegationName = (querySnapshot) =>{
@@ -117,14 +118,14 @@ export default class Report2 extends Component {
                     case 0: //draw cities rows
                         rowData.push(this.state.cityTable[i])
                         break;
-                    case 1:  //total reg candidate this week
+                    case 1:  //num of candidate total
                         this.dbRef
                             .where('regTime', '>', weekAgo)
                             .get()
                             .then(querySnapshot => {
                                 querySnapshot.forEach(res => {
                                     if (res.data().Location == this.state.cityTable[i]) {
-                                        if (res.data().Destination == this.state.delegation )
+                                        if (res.data().Destination = this.state.delegation )
                                             weekData++
                                     }
                                 })
@@ -151,15 +152,13 @@ export default class Report2 extends Component {
 
     render(){
         this.cityChecker()
-        return(
-            <ImageBackground source={require('../pics/background.jpeg')} style={styles.container}>
-
-            <View style={styles.container}>
+        return <View style={styles.container}>
             <View style={styles.headerTitle}>
 
-                <Text style={{fontSize:20}}> דוח 2 </Text>
-                <Text>דוח זה מנפיק נתונים על מספר הנרשמים בשבוע הנוכחי לפי משלחת מסויימת </Text>
-
+                <Text> דוח 2 </Text>
+                <Item floatingLabel>
+                    <Label>בחר משלחת</Label>
+                </Item>
                 <Item picker>
                     <Picker
                         mode="dropdown"
@@ -169,7 +168,7 @@ export default class Report2 extends Component {
                         placeholderIconColor="#007aff"
                         selectedValue={this.state.delegation}
                         onValueChange={(value) => {this.setState({delegation: value})} }>
-                        <Picker.Item label="בחר משלחת" value=""/>
+                        <Picker.Item label="בחר" value=""/>
                         {
                             this.state.destinationArr.map((city, i) => {
 
@@ -178,24 +177,28 @@ export default class Report2 extends Component {
                         }
                     </Picker>
                 </Item>
+                <View>
+                    <Text>write here..</Text>
 
+                    {
+                    }
+
+
+
+                </View>
                 <Button onPress={() => {
 
 
-                    // this.cityChecker();
-                    if(this.state.delegation == '')
-                    {
-                        alert('נא לבחור משלחת')
-                    }
-                    else{
-                        this.Generate();
-                        setTimeout(() => {
-                            this.setState({renderIndex: this.state.renderIndex + 1});
-                        }, 1000);
-                    }
-
+                   // this.cityChecker();
+                    this.Generate();
                 }} title={"הנפק"}/>
 
+                <Button
+
+                    onPress={() => {
+                        this.setState({ temp: this.state.temp + 1 });
+                    }}
+                    title={"הצג נתונים"}/>
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
@@ -225,13 +228,11 @@ export default class Report2 extends Component {
                 </View>
             </ScrollView>
         </View>
-            </ImageBackground>
-        )
     }
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 5, paddingTop: 2 },
+    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     header: { height: 50, backgroundColor: '#537791' },
     text: { textAlign: 'center', fontWeight: '100' },
     dataWrapper: { marginTop: -1 },

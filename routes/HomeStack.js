@@ -3,31 +3,42 @@ import HomeScreen from '../screens/HomeScreen';
 import RegistrationForm from '../screens/RegistrationForm';
 import LoginForm from '../screens/LoginForm';
 import React from 'react';
+import OurVisionScreen from "../screens/OurVisionScreen";
+import Header from "../screens/common/Header";
 
 
 const screens ={
     HomeScreen:{
         screen: HomeScreen,
-        navigationOptions:() =>({
-        title:'דף הבית',
-        //title: this.props.navigation.getParam('otherParam', 'A Nested Details Screen'),
-        headerStyle: {
-        backgroundColor: 'transparent',
-        //Background color of ActionBar
-      },
-        })
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='דף הבית' />
+            }
+        }
     },
     RegistrationForm:{
         screen : RegistrationForm,
-        navigationOptions:() =>({
-            title:'הגשת מועמדות'
-        })
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='דף הרשמה' />
+            }
+        }
     },
     LoginForm:{
         screen:LoginForm,
-        navigationOptions:() =>({
-            title:'מערכת מורשים'
-        })
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='מערכת מורשים' />
+            }
+        }
+    },
+    OurVisionScreen:{
+        screen:OurVisionScreen,
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='חזון העמותה' />
+            }
+        }
     },
 }
 

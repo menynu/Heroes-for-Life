@@ -2,19 +2,25 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import Volunteer from '../screens/Volunteer';
 import Information from '../screens/Information';
+import Header from "../screens/common/Header";
+import React from "react";
 
 const screens ={
     VolunteerScreen:{
         screen:Volunteer,
-        navigationOptions:() =>({
-            title:'אזור מלגאים',
-        })
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='אזור מלגאים' />
+            }
+        }
     },
     Information:{
         screen:Information,
-        navigationOptions:() =>({
-            title:'עידכון מידע על המועמד',
-        })
+        navigationOptions:({ navigation }) =>{
+            return {
+                headerTitle: () => <Header navigation={navigation} title='עדכון פרטים' />
+            }
+        }
     },
 
 

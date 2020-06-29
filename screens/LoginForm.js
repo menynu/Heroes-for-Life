@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import {TextInput, Button, Alert, Text, Image} from 'react-native';
-import { Header } from 'react-native-elements';
+import {TextInput, Button, Alert, Text, Image,ImageBackground} from 'react-native';
 import {Icon, View} from 'native-base';
 import { DotIndicator } from 'react-native-indicators';
 import firebase from '../database/firebaseDb';
 
-
-//import Volunteer from './Volunteer'; //added
 
 class LoginForm extends Component {
     static counter;
@@ -17,7 +14,7 @@ class LoginForm extends Component {
             email: "",
             password: "",
             delegation: '',
-            loading: false
+            loading: false,
         }
     }
 
@@ -65,24 +62,35 @@ class LoginForm extends Component {
 
 
     onButtonPress() {
-        // firebase.auth().onAuthStateChanged((user) => {
-        //     if(user != null) {
-        //         this.addUserToFire()
-        //     }
-        // })
 
         const { email, password } = this.state
         this.setState({ loading: true })
+        let isExisted = false;
+        this.usersRef
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(res => {
+                    console.log('RES EMAIL: ',res.data().email , 'email: ', email)
+                    if (res.data().email === email) {
+                        isExisted=true;
+                        firebase
+                            .auth()
+                            .signInWithEmailAndPassword(email, password)
+                            .then(
+                                this.onLoginSuccess.bind(this)
+                            )
+                            .catch(
+                                this.onLoginFail.bind(this)
+                            )
+                        this.setState({email: "",password:""})
+                    }
+                })
 
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(
-                this.onLoginSuccess.bind(this)
-            )
-            .catch(
-                this.onLoginFail.bind(this)
-            )
+                if (isExisted===false){
+                    alert('המשתמש לא קיים במערכת')
+                    this.setState({email: "",password:"", loading: false})
+                }
+            })
     }
 
 
@@ -95,7 +103,7 @@ class LoginForm extends Component {
         return (
             <View style = {styles.buttonStyle}>
                 <Button
-                    title = "Log in"
+                    title = "כניסה למערכת"
                     color = "004577"
                     backgroundColor = 'white'
                     onPress= {() => this.onButtonPress()}
@@ -104,64 +112,63 @@ class LoginForm extends Component {
             </View>
         )
     }
+    renderButtonP() {
+        if (this.state.loading) {
+            return <DotIndicator color = "#004577"/>
+        }
+
+        return (
+            <View style = {styles.buttonStyle}>
+                <Button
+                    title = "שכחתי סיסמא"
+                    color = "004577"
+                    backgroundColor = 'white'
+                    onPress= {() => firebase.auth().sendPasswordResetEmail(this.state.email)
+                        .then (()=>{alert('איפוס סיסמא בוצע בהצלחה'); this.setState({email: "",password:""})})
+                        .catch(()=> alert('אנא הכנס כתובת מייל לאיפוס סיסמא'))
+                    }
+                >
+                </Button>
+            </View>
+        )
+    }
 
     render() {
         return(
-            <View style= {{backgroundColor: 'white'}}>
-                <View style={styles.headerTitle}>
+            <ImageBackground source={require('./pics/loginBackGround.jpg')} style={styles.container}>
+                <View style= {{width:'100%',paddingTop:'70%'}}>
 
-                    <Icon name='menu' style={{marginRight: 15, marginTop:15}}  onPress={() => this.props.navigation.openDrawer()}/>
-                    <Image source={require('./pics/hflCustom.png')} style={styles.HomeScreenLogo}
-                           style={{
-                               marginTop: 5,
-                               marginBottom: 5,
-                               marginLeft: 15,
-                               resizeMode: 'contain',
-                               flex: 1,
-                               justifyContent: 'center',
-                               alignItems: 'center',
-                               width: '100%',
-                               height: '100%',
-                           }}
-                    />
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style = {styles.textInputStyle}
+                            textAlign = "center"
+                            placeholder = {"Email"}
+                            placeholderTextColor = "#BCBCBC"
+                            height = {45}
+                            autoCorrect = {false}
+                            onChangeText = {email => this.setState({ email })}
+                            value = {this.state.email}
+                        />
+                    </View>
+
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style = {styles.textInputStyle}
+                            textAlign = "center"
+                            placeholder = {"Password"}
+                            placeholderTextColor = "#BCBCBC"
+                            secureTextEntry = {true}
+                            height = {45}
+                            autoCorrect = {false}
+                            onChangeText = {password => this.setState({ password })}
+                            value = {this.state.password}
+                        />
+                    </View>
+
+                    <View>{this.renderButton()}</View>
+                    <View>{this.renderButtonP()}</View>
                 </View>
-                <View style={styles.inputView}>
-                    <TextInput
-                        style = {styles.textInputStyle}
-                        textAlign = "center"
-                        placeholder = {"Email"}
-                        placeholderTextColor = "#BCBCBC"
-                        height = {45}
-                        autoCorrect = {false}
-                        onChangeText = {email => this.setState({ email })}
-                        value = {this.state.email}
-                    />
-                </View>
-
-                <View style={styles.inputView}>
-                    <TextInput
-                        style = {styles.textInputStyle}
-                        textAlign = "center"
-                        placeholder = {"Password"}
-                        placeholderTextColor = "#BCBCBC"
-                        secureTextEntry = {true}
-                        height = {45}
-                        autoCorrect = {false}
-                        onChangeText = {password => this.setState({ password })}
-                        value = {this.state.password}
-                    />
-                </View>
-
-                <View>{this.renderButton()}</View>
-
-            <View style={{backgroundColor:'white'}}>
-            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
-            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
-            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
-            <Text></Text><Text></Text><Text></Text><Text></Text><Text></Text><Text></Text>
-            </View>
-
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -169,6 +176,16 @@ class LoginForm extends Component {
 export default LoginForm;
 
 const styles = {
+    container:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    image:{
+        alignSelf: "center",
+        width: "60%",
+    },
+
     inputView: {
         paddingTop: 20,
         paddingBottom: 20

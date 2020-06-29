@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button,Image, Platform, StyleSheet, Text, TouchableOpacity, View, ImageBackground} from 'react-native';
+import { Button, StyleSheet, Text, View, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card, CardSection } from './common';
+// import { Card1, CardSection1 } from './common';
 import { withTheme } from 'react-native-elements';
 // import Video from 'react-native-video';
 import {Icon} from 'native-base';
+import { Card1 } from '../screens/common/Card1'
+import { CardSection1 } from '../screens/common/CardSection1'
 
 
 
@@ -12,118 +14,107 @@ export default class HomeScreen extends Component {
 
     render(){
         return (
-
-        <View style= {{flex: 1, backgroundColor: "white" }}>
-
-
-            <View style={styles.headerTitle}>
-
-                <Text>  </Text><Icon name='menu' style={{marginRight: 15, marginTop:15}}  onPress={() => this.props.navigation.openDrawer()}/>
-                <Image source={require('./pics/hflCustom.png')} style={styles.HomeScreenLogo}
-                       style={{
-                           marginTop: 5,
-                           marginBottom: 5,
-                           marginLeft: 15,
-                           resizeMode: 'contain',
-                           flex: 1,
-                           justifyContent: 'center',
-                           alignItems: 'center',
-                           width: '100%',
-                           height: '100%',
-                       }}
-                />
-            </View>
-
-        <ScrollView style={{marginTop:10}}>
+    <ImageBackground source={require('./pics/background.jpeg')} style={styles.container}>
+        <View style= {{width: '99%', height: "99%" }}>
+        <ScrollView>
             <View>
-                <Card>
+                <Card1>
                     <View>
                         <ImageBackground source={require('./pics/introBackground.jpg')} style={styles.introBackground}>
-
-                        <View><Text> </Text></View>
-                        <View><Text> </Text></View>
-                        
-
-                        <CardSection>
+                        <CardSection1>
                             <Text style={styles.textTitle}>לוחמים ללא גבולות</Text>
                             <Text style={styles.line}>__________________</Text>
                             <View><Text> </Text></View>
-                        </CardSection>
+                        </CardSection1>
 
                         <View style={styles.messageBox}>
-                            <CardSection >
+                            <CardSection1 >
                                 <Text style={styles.textMessage}>ניתן להירשם כעת גם למשלחות החדשות, כאן בישראל!!</Text>
-                            </CardSection>
+                            </CardSection1>
                         </View>
 
                         <View style={styles.signUp}>
-                            <CardSection>
-                                <Button 
+                            <CardSection1>
+                                <Button
                                     onPress={() => this.props.navigation.navigate('RegistrationForm')}
                                     title="     להתנדבות     "
                                     color = "#31c5c7"
-                                /> 
-                            </CardSection>
+                                />
+                            </CardSection1>
                         </View>
-
-
-                        <Text> </Text>
-                        <Text> </Text>
-                        <Text> </Text>
-                        <Text> </Text>
 
                         </ImageBackground>
                     </View>
-                </Card>
+                </Card1>
 
-                <Card>
+                <Card1>
                     <View>
                         <ImageBackground source={require('./pics/israelFlag.jpg')} style={styles.introBackground}>
                             <View style={styles.aboutContainer}>
-                                <CardSection>
-                                    <Text></Text>
-                                    <Text></Text>
+                                <CardSection1>
                                     <Text style={styles.textWho}>מי אנחנו?</Text>
                                     <Text style={styles.line}>__________________</Text>
-                                </CardSection>
+                                </CardSection1>
 
-                                <CardSection>
+                                <CardSection1>
                                     <Text style={styles.textAbout1}>עמותת "לוחמים ללא גבולות" הינה עמותה ישראלית ציונית הפועלת למנף את התשתית העצומה של עשרות אלפי תרמילאים ישראלים בוגרי צבא המטיילים במדינות העולם השלישי לטובת התנדבות הומניטארית כחול לבן במדינות אלו כחלק מ"הטיול הגדול"</Text>
-
+                                    <Text style={styles.line}>__________________</Text>
                                     <Text style = {styles.textAbout2}>העמותה הוקמה בשנת 2013 בידי שלושה קצינים בוגרי יחידת דובדבן אשר טיילו במזרח הרחוק ונחשפו לכמות הבלתי נתפסת של ישראלים המטיילים במדינות העולם השלישי במהלך "הטיול הגדול" (כמות הנאמדת בכ450,000 תרמילאים מדי עשור). המחשבה הייתה כי אם נשכיל למנף תשתית עצומה זו נוכל לעשות המון טוב וגם להציג את פניה היפות והאמיתיות של ישראל ובוגרי צה"ל בעולם.</Text>
-                                </CardSection>
-                            </View>    
+                                </CardSection1>
+                            </View>
+                            <View style={styles.aboutUs}>
+                                <CardSection1>
+                                    <Button
+                                        onPress={() => this.props.navigation.navigate('OurVisionScreen')}
+                                        title="         עוד עלינו         "
+                                        color = "#31c5c7"
+                                    />
+                                </CardSection1>
+                            </View>
                         </ImageBackground>
                     </View>
-                </Card>
+                </Card1>
 
-                <Card>
+                <Card1>
                     <View>
-                        <CardSection>
+                        <CardSection1>
                             <Button
                                 onPress={() => this.props.navigation.navigate('LoginForm')}
                                 title="כניסה למורשים"
                                 color = "#31c5c7"
                             />
-                        </CardSection>
+                        </CardSection1>
                     </View>
-                </Card>
+                </Card1>
             </View>
-            
+
 
         </ScrollView>
         </View>
-
+    </ImageBackground>
         );
     }
 }
 const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
     backgroundImage: {
         width: '100%',
         height: '100%',
         flexDirection: 'row',
     },
     introBackground: {
+
+    },
+    pageTitle: {
+       fontSize: 25,
+       marginHorizontal: 100,
+        alignSelf: 'center',
+       marginVertical: 10,
+       color: '#31c5c7',
 
     },
     headerTitle: {
@@ -190,11 +181,17 @@ const styles = StyleSheet.create({
         color: "black",
         fontSize: 26,
         flex: 1,
-        textAlign: 'justify',
+        textAlign:'center',
     },
     textAbout2: {
         color: "black",
         fontSize: 23,
         textAlign: 'justify',
+    },
+    aboutUs: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20,
     },
 });

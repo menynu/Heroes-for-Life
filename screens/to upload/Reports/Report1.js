@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, ScrollView, Text, Image, TouchableHighlight, Button, ImageBackground} from 'react-native';
+import {StyleSheet, View, ScrollView, Text, Image, TouchableHighlight, Button} from 'react-native';
 import { Table, Row } from 'react-native-table-component';
 import firebase from '../../database/firebaseDb';
 
@@ -48,8 +48,6 @@ export default class Report2 extends Component {
         this.setState({
             destinationArr,
         });
-        this.getTotalReg();
-        this.Generate()
     }
 
 
@@ -113,44 +111,46 @@ export default class Report2 extends Component {
                         })
                         rowData.push(maleWeek) // 2 - male week
 
-
-                        if (weekData==0||maleWeek*100 / weekData == 0)  // 3  % male week
+                        if (maleWeek*100 / weekData == 0)  // 3  % male week
                             rowData.push(0 +'%')
                         else
-                            rowData.push((maleWeek*100 / weekData).toFixed(2) +'%')
+                            rowData.push(maleWeek*100 / weekData +'%')
 
                         rowData.push(femaleWeek) // 4 female week
 
-                        if (weekData==0||femaleWeek*100 / weekData == 0)  // 5 % female week
+                        if (femaleWeek*100 / weekData == 0)  // 5 % female week
                             rowData.push(0 +'%')
                         else
-                            rowData.push((femaleWeek*100 / weekData).toFixed(2) +'%')
+                            rowData.push(femaleWeek*100 / weekData +'%')
                         rowData.push(weekData) // 6-  total week
                         rowData.push(this.state.totalReg[i])
                     })
             }
             tableData.push(rowData);
-
         }
         this.setState({
             tableData: tableData,
+            //key: this.state.key + 1
         })
     }
-
 
     render(){
 
         console.log(this.state)
-        return(
-            <ImageBackground source={require('../pics/background.jpeg')} style={styles.container}>
-            <View style={styles.container}>
+        return <View style={styles.container}>
             <View style={styles.headerTitle}>
 
-                <Text style={{fontSize:20}}> דוח 4 - דו'ח כללי </Text>
-                <Text>דוח זה הינו דוח מסכם - מוציא על כל משלחת את נתוני המועמדים </Text>
+                <Text> דוח 1 - דו'ח כללי </Text>
+
                 <View style={{marginTop: 15}}>
 
                 </View>
+                <Button onPress={() => {
+                    // this.firestoreRef.onSnapshot(this.getDelegationName);
+                    this.getTotalReg();
+                    this.Generate();
+
+                }} title={"הנפק"}/>
 
                 <Text style={{marginTop: 2}} />
                 <Button
@@ -158,7 +158,10 @@ export default class Report2 extends Component {
                     onPress={() => {
                         this.setState({ key: this.state.key + 1 });
                     }}
-                    title={"הנפק דו'ח"}/>
+                    title={"הצג נתונים"}/>
+
+
+
 
             </View>
             <ScrollView horizontal={true} style={{marginTop: 20}}>
@@ -195,13 +198,11 @@ export default class Report2 extends Component {
                 </View>
             </ScrollView>
         </View>
-            </ImageBackground>
-        )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {flex: 1, padding: 5, paddingTop: 2  },
+    container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
     header: { height: 50, backgroundColor: '#537791' },
     text: { textAlign: 'center', fontWeight: '100' },
     dataWrapper: { marginTop: -1 },

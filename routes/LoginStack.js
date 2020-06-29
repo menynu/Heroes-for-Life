@@ -1,6 +1,8 @@
 import { createStackNavigator } from 'react-navigation-stack';
 import LoginForm from '../screens/LoginForm';
-import AdminPage from '../screens/AdminPage'
+import AdminPage from '../screens/AdminPage';
+import VolunteerScreen from '../screens/VolunteerScreen';
+
 
 const screens ={
     LoginForm:{
@@ -13,6 +15,14 @@ const screens ={
 			headerTitle: () => <Header navigation={navigation}/>,
 		}
 	}
+    },
+    VolunteerScreen:{
+        screen:VolunteerScreen,
+        navigationOption: ({navigation}) =>{
+            return{
+                headerTitle: () => <Header navigation={navigation}/>,
+            }
+        }
     },
 }
 
