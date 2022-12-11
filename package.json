@@ -23,7 +23,7 @@
     "expo-updates": "~0.2.0",
     "firebase": "^7.14.4",
     "native-base": "^2.13.12",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "~0.61.5",
